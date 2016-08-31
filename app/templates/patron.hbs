@@ -1,0 +1,92 @@
+<style>
+[data-sort=table] > tbody > tr:hover{
+  background-color: #1686b0;
+  cursor: pointer;
+}
+</style>
+<div class="col-sm-12" style="padding-top: 10px;">
+  {{#if _id}}
+  <div id="statsButton" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="showedit" class="btn btn-lg btn-primary-outline" >
+      <strong>Edit</strong>
+    </button>
+  </div>
+  <div id="stats" class="statcard statcard-primary p-a-md m-b">
+    <h2><div class="statcard-desc">{{firstname}} {{lastname}}</div></h2>
+    <h3><a href="mailto:{{email}}?subject={{firstname}}%20{{lastname}}%20{{phone}}" style="color: #FFF;">{{email}}</a></h3>
+    <h4>{{phone}}</h4>
+    <h2 class="statcard-number text-right">BALANCE</h2>
+    {{#currencies}}
+      {{#if balance}}
+      <h3 class="statcard-number text-right">
+        {{currency_name}} {{decimal_places balance}}
+      </h3>
+      {{/if}}
+    {{/currencies}}
+  </div>
+  {{/if}}
+  <form id='patronForm' {{#if _id}}style="display: none;"{{/if}}>
+    {{#if _id}}<input type="hidden" name="_id" value="{{_id}}" />{{/if}}
+    <div class="form-group text-left">
+      <label for="firstname">First name</label>
+      <input type="text" id="firstname" name="firstname" value="{{firstname}}" placeholder="First Name" class="form-control" />
+    </div>
+    <div class="form-group text-left">
+      <label for="lastname">Last name</label>
+      <input type="text" id="lastname" name="lastname" value="{{lastname}}" placeholder="Last Name" class="form-control" />
+    </div>
+    <div class="form-group text-left">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="{{email}}" placeholder="Email" class="form-control" />
+    </div>
+    <div class="form-group text-left">
+      <label for="email">Phone</label>
+      <input type="text" id="phone" name="phone" value="{{phone}}" placeholder="Phone" class="form-control" />
+    </div>
+    <div class="form-group text-right">
+      <button type="button" name="cancel" class="btn btn-lg btn-primary-outline" >Cancel</button>
+      <button type="button" name="upsert" class="btn btn-lg btn-primary-outline" >
+        <strong>{{#if _id}}Edit{{else}}New{{/if}}</strong>
+      </button>
+    </div>
+  </form>
+
+  {{#if _id}}
+  <h2><strong>Cards</strong></h2>
+  <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="newCard" class="btn btn-lg btn-success-outline" >
+      <strong>New Card</strong>
+    </button>
+  </div>
+  <div class="table-full">
+    <table class="table" data-sort="table">
+      <thead>
+        <tr>
+          <th>Card</th>
+        </tr>
+      </thead>
+      <tbody class="table-rows">
+        {{#each cards}}
+          {{#this}}
+          <tr id="{{_id}}">
+            <td>
+              <div id="card-stats" class="statcard statcard-success p-a-md m-b">
+                <h3 class="statcard-number">
+                    Card#: {{key}}
+                </h3>
+                <h5 class="statcard-number text-right">BALANCE</h5>
+                {{#each balances}}
+                  <h6 class="statcard-number text-right">
+                    {{../decimal_places this}} {{@key}}
+                  </h6>
+                {{/each}}
+              </div>
+            </td>
+          </tr>
+          {{/this}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{/if}}
+</div>

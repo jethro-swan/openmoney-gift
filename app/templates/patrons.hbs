@@ -1,0 +1,33 @@
+<style>
+[data-sort=table] > tbody > tr:hover{
+  background-color: #159c6e;
+  cursor: pointer;
+}
+</style>
+<div class="col-sm-12" style="padding-top: 10px;">
+  <div class="row text-right" style="padding-top: 20px;padding-bottom: 20px;">
+    <button type="button" name="newPatron" class="btn btn-lg btn-success-outline">New Patrons</button>
+  </div>
+  <div class="table-full">
+    <table class="table display" data-sort="table">
+      <thead>
+        <tr>
+          <th class="">Firstname</th>
+          <th class="">Lastname</th>
+          <th class="">Email</th>
+          <th class="">Phone</th>
+        </tr>
+      </thead>
+      <tbody class="table-rows">
+        {{#each collection}}
+          <tr id="{{_id}}">
+            <td>{{firstname}}</td>
+            <td>{{lastname}}</td>
+            <td>{{email}}</td>
+            <td>{{phone}}</td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

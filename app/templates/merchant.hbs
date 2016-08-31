@@ -1,0 +1,137 @@
+<style>
+
+</style>
+<div class="col-sm-12" style="padding-top: 10px;">
+  {{#if _id}}
+  <div id="statsButton" class="text-right" style="padding-bottom:10px;">
+    <button type="button" id="logout-button" class="btn btn-xs btn-pill btn-danger" style="margin-top: 7px;"><span class="icon icon-log-out"></span> Logout : {{merchantname}} </button>
+    <!-- <button type="button" name="showedit" class="btn btn-lg btn-primary-outline" >
+      <strong>Edit</strong>
+    </button> -->
+  </div>
+  <div id="stats" class="statcard statcard-info p-a-md m-b">
+    <h2><div class="statcard-number">Merchant: {{merchantname}}</div></h2>
+    <div class="statcard-desc">EMAIL: <a href="mailto:{{email}}" style='color:#FFF'>{{email}}</a></div>
+  </div>
+  {{/if}}
+  <form id='merchantForm' {{#if merchantname}}style="display: none;"{{/if}}>
+    {{#if id}}<input type="hidden" name="id" value="{{id}}" />{{/if}}
+    <div class="form-group text-left">
+      <label for="merchantname">Merchant Name</label>
+      <input type="text" id="merchantname" name="merchantname" value="{{merchantname}}" placeholder="Merchantname Name" class="form-control" />
+    </div>
+    <div class="form-group text-right">
+      <button type="button" name="cancel" class="btn btn-lg btn-primary-outline" >Cancel</button>
+      <button type="button" name="upsert" class="btn btn-lg btn-primary-outline" >
+        <strong>{{#if id}}Edit{{else}}Add{{/if}}</strong>
+      </button>
+    </div>
+  </form>
+
+  {{#if _id}}
+  <h2><strong>Currencies</strong></h2>
+  <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="newCurrency" class="btn btn-lg btn-success-outline" >
+      <strong>New Currency</strong>
+    </button>
+  </div>
+  <div class="table-full">
+    <table class="table currencies" data-sort="table">
+      <thead>
+        <tr>
+          <th>Currency</th>
+          <th>Enable or Disable</th>
+          <th>Default</th>
+        </tr>
+      </thead>
+      <tbody class="table-rows">
+        {{#each currencies}}
+          {{#this}}
+          <tr id="{{_id}}">
+            <td><a href="#merchants/{{../merchantname}}/administrative/currencies/{{currency}}">{{currency}}</a></td>
+            <td>
+              <div class="radio-inline custom-control custom-radio">
+                <label>
+                  <input type="radio" id="{{currency}}~enable" name="{{currency}}~active" class="active-radio" {{#enabled}}checked="checked"{{/enabled}}>
+                  <span class="custom-control-indicator"></span>
+                  Enable
+                </label>
+              </div>
+              <div class="radio-inline custom-control custom-radio">
+                <label>
+                  <input type="radio" id="{{currency}}~disable" name="{{currency}}~active" class="active-radio" {{#unless enabled}}checked="checked"{{/unless}}>
+                  <span class="custom-control-indicator"></span>
+                  Disable
+                </label>
+              </div>
+            </td>
+            <td>
+              <div class="radio-inline custom-control custom-radio">
+                <label>
+                  <input type="radio" id="{{currency}}~default" name="{{currency}}~default" class="default-radio" {{#default}}checked="checked"{{/default}}>
+                  <span class="custom-control-indicator"></span>
+                  Default
+                </label>
+              </div>
+            </td>
+          </tr>
+          {{/this}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  <h2><strong>Employees</strong></h2>
+  <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="newEmployee" class="btn btn-lg btn-success-outline" >
+      <strong>New Employees</strong>
+    </button>
+  </div>
+  <div class="table-full">
+    <table class="table employees" data-sort="table">
+      <thead>
+        <tr>
+          <th>Employee Name</th>
+          <th>Enable or Disable</th>
+          <th>Merchant</th>
+        </tr>
+      </thead>
+      <tbody class="table-rows">
+        {{#each employees}}
+          {{#this}}
+          <tr id="{{_id}}">
+            <td><a href="#merchants/{{../merchantname}}/administrative/employee/{{name}}">{{name}}</a></td>
+            <td>
+              <div class="radio-inline custom-control custom-radio">
+                <label>
+                  <input type="radio" id="{{name}}~employeeEnable" name="{{name}}~employeeActive" class="employeeActive-radio" {{#enabled}}checked="checked"{{/enabled}}>
+                  <span class="custom-control-indicator"></span>
+                  Enable
+                </label>
+              </div>
+              <div class="radio-inline custom-control custom-radio">
+                <label>
+                  <input type="radio" id="{{name}}~employeeDisable" name="{{name}}~employeeActive" class="employeeActive-radio" {{#unless enabled}}checked="checked"{{/unless}}>
+                  <span class="custom-control-indicator"></span>
+                  Disable
+                </label>
+              </div>
+            </td>
+            <td>
+              <div class="radio-inline custom-control custom-radio">
+                <label>
+                  <input type="radio" id="{{name}}~employeeDefault" name="{{name}}~employeeDefault" class="employeeDefault-radio" {{#default}}checked="checked"{{/default}}>
+                  <span class="custom-control-indicator"></span>
+                  Merchant
+                </label>
+              </div>
+            </td>
+          </tr>
+          {{/this}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+
+  {{/if}}
+</div>

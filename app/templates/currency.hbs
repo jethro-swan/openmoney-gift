@@ -1,0 +1,133 @@
+<style>
+[data-sort=table] > tbody > tr:hover{
+  background-color: #159c6e;
+  cursor: pointer;
+}
+tr.DEBIT {
+  color: #159c6e;
+}
+tr.CREDIT {
+  color: #E64759;
+}
+</style>
+<div class="col-sm-12" style="padding-top: 10px;">
+  <form id='currencyForm' >
+    {{#if id}}
+    <input type="hidden" name="id" value="{{id}}" />{{/if}}
+    <div class="form-group text-left">
+      <label for="key">Currency Name (ex. Loyalty)</label>
+      <input type="text" id="currency_name" name="currency_name" value="{{currency_name}}" placeholder="Currency Name" class="form-control" />
+    </div>
+    <div class="form-group text-left">
+      <label for="key">Currency Units (ex. points)</label>
+      <input type="text" id="currency" name="currency" value="{{currency}}" placeholder="Currency Units" class="form-control" />
+    </div>
+    <div class="table-full form-group text-left">
+      <div>
+        <label for="key">Currency Color:</label>
+      </div>
+      <input type="hidden" name="currency_color" value="{{currency_color}}"/>
+      <table class="table">
+        <tbody class="table-rows">
+          <tr>
+            <td>
+              <button type="button" name="color" value="default" class="btn btn-lg btn-pill btn-default">Default</button>
+            </td>
+            <td>
+              <button type="button" name="color" value="primary" class="btn btn-lg btn-pill btn-primary">Primary</button>
+            </td>
+            <td>
+              <button type="button" name="color" value="success" class="btn btn-lg btn-pill btn-success">Success</button>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <button type="button" name="color" value="info" class="btn btn-lg btn-pill btn-info">Info</button>
+            </td>
+            <td>
+              <button type="button" name="color" value="warning" class="btn btn-lg btn-pill btn-warning">Warning</button>
+            </td>
+            <td>
+              <button type="button" name="color" value="danger" class="btn btn-lg btn-pill btn-danger">Danger</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="form-group text-right">
+      <button type="button" name="cancel" class="btn btn-lg btn-primary-outline" >Cancel</button>
+      <button type="button" name="upsert" class="btn btn-lg btn-primary-outline" >
+        <strong>{{#if id}}Edit{{else}}{{#if_eq currencyName 'add'}}Add{{else}}New{{/if_eq}}{{/if}}</strong>
+      </button>
+    </div>
+  </form>
+
+  {{#if id}}
+
+  <!-- <h2><strong>Accounts</strong></h2>
+  <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="newAccount" class="btn btn-lg btn-success-outline" >
+      <strong>New Account</strong>
+    </button>
+  </div>
+  <div class="table-full">
+    <table class="table accounts" data-sort="table">
+      <thead>
+        <tr>
+          <th>Account</th>
+          <th>Balance</th>
+          <th>Volume</th>
+        </tr>
+      </thead>
+      <tbody class="table-rows">
+        {{#each accounts}}
+          {{#this}}
+          <tr id="{{id}}">
+            <td>{{accountName}}</td>
+            <td>{{decimal_places balance}}</td>
+            <td>{{decimal_places volume}}</td>
+          </tr>
+          {{/this}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div> -->
+
+  <!-- <h2><strong>Ledger</strong></h2>
+  <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="newTransaction" class="btn btn-lg btn-success-outline" >
+      <strong>Process Journal Entry</strong>
+    </button>
+  </div>
+  <div class="table-full">
+    <table class="table" data-sort="basic">
+      <thead>
+        <tr>
+          <th>Timestamp</th>
+          <th>From</th>
+          <th>To</th>
+          <th>Amount</th>
+          <th>balance</th>
+          <th>volume</th>
+        </tr>
+      </thead>
+      <tbody class="table-rows">
+        {{#each journals}}
+          {{#this}}
+            <tr id="{{id}}" class="{{charge}}">
+              <td>{{prettify_date_short created}}</td>
+              <td>{{#if fromstewardname}}<a href="#stewards/{{fromstewardname}}/accounts/{{from_account}}.{{from_account_namespace}}/{{currencyName}}">{{from_account}}.{{from_account_namespace}}</a>{{else}}{{from_account}}.{{from_account_namespace}}{{/if}}</td>
+              <td>{{#if tostewardname}}<a href="#stewards/{{tostewardname}}/accounts/{{to_account}}.{{to_account_namespace}}/{{currencyName}}">{{to_account}}.{{to_account_namespace}}</a>{{else}}{{to_account}}.{{to_account_namespace}}{{/if}}</td>
+              <td>{{#if_eq charge 'CREDIT'}}-{{/if_eq}}{{decimal_places amount}}</td>
+              <td>{{decimal_places balance}}</td>
+              <td>{{decimal_places volume}}</td>
+            </tr>
+          {{/this}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div> -->
+  {{/if}}
+</div>

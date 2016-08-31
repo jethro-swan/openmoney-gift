@@ -1,0 +1,78 @@
+<style>
+[data-sort=table] > tbody > tr:hover{
+  background-color: #159c6e;
+  cursor: pointer;
+}
+</style>
+<div class="col-sm-12" style="padding-top: 10px;">
+  {{#if _id}}
+  <div id="statsButton" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="showedit" class="btn btn-lg btn-primary-outline" >
+      <strong>Edit</strong>
+    </button>
+  </div>
+  <div id="stats" class="statcard statcard-success p-a-md m-b text-left">
+    <span class="statcard-number" style="float: left">
+      <h1>Card#: {{key}}</h1>
+      <div><h2 class="statcard-number text-left" style="float: left;">BALANCE</h2></div>
+      {{#currencies}}
+        {{#if balance}}
+        <div><h3 class="statcard-number text-left" style="float: left;">
+          {{currency_name}} {{decimal_places balance}}
+        </h3></div>
+        {{/if}}
+      {{/currencies}}
+    </span>
+    <span id="qrcode-image">
+      <canvas id="qr" style="margin-left: auto; margin-right: 0;"></canvas>
+    </span>
+  </div>
+  {{/if}}
+  <form id='cardForm' {{#if _id}}style="display: none;"{{/if}}>
+    {{#if _id}}<input type="hidden" name="_id" value="{{_id}}" />{{/if}}
+
+    <div class="form-group text-left">
+      <label for="key">Card Number</label>
+      <input type="text" id="key" name="key" value="{{key}}" placeholder="Card Number" class="form-control" />
+    </div>
+    <div class="form-group text-right">
+      <button type="button" name="cancel" class="btn btn-lg btn-primary-outline" >Cancel</button>
+      <button type="button" name="upsert" class="btn btn-lg btn-primary-outline" >
+        <strong>{{#if _id}}Edit{{else}}New{{/if}}</strong>
+      </button>
+    </div>
+  </form>
+
+  {{#if _id}}
+  <h2><strong>Card History</strong></h2>
+  <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="newTransaction" class="btn btn-lg btn-success-outline" >
+      <strong>Process Transaction</strong>
+    </button>
+  </div>
+  <div class="table-full">
+    <table class="table" data-sort="basic">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Load or Redeem</th>
+          <th>Amount</th>
+          <th>Currency</th>
+        </tr>
+      </thead>
+      <tbody class="table-rows">
+        {{#each journals}}
+          {{#this}}
+          <tr id="{{_id}}">
+            <td>{{prettify_date timestamp}}</td>
+            <td>{{#load}}Load{{/load}}{{#redeem}}Redeem{{/redeem}}</td>
+            <td>{{decimal_places amount}}</td>
+            <td>{{currency}}</td>
+          </tr>
+          {{/this}}
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+  {{/if}}
+</div>

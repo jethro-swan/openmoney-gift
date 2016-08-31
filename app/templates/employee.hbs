@@ -1,0 +1,33 @@
+<style>
+</style>
+<div class="col-sm-12" style="padding-top: 10px;">
+  {{#if _id}}
+  <div id="statsButton" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="showedit" class="btn btn-lg btn-primary-outline" >
+      <strong>Edit</strong>
+    </button>
+  </div>
+  <div id="stats" class="statcard statcard-primary p-a-md m-b">
+    <h2><div class="statcard-desc">EMPLOYEE: {{name}}</div></h2>
+    <h3>PIN: {{code}}</h3
+  </div>
+  {{/if}}
+  <form id='employeeForm' {{#if _id}}style="display: none;"{{/if}}>
+    {{#if _id}}
+    <input type="hidden" name="id" value="{{_id}}" />{{/if}}
+    <div class="form-group text-left">
+      <label for="key">Employee Name</label>
+      <input type="text" id="name" name="name" value="{{name}}" placeholder="Employee Name" class="form-control" />
+    </div>
+    <div class="form-group text-left">
+      <label for="key">Pin Code</label>
+      <input type="password" id="password" name="code" value="{{code}}" placeholder="Pin Code" class="form-control" />
+    </div>
+    <div class="form-group text-right">
+      <button type="button" name="cancel" class="btn btn-lg btn-primary-outline" >Cancel</button>
+      <button type="button" name="upsert" class="btn btn-lg btn-primary-outline" >
+        <strong>{{#if _id}}Edit{{else}}New{{/if}}</strong>
+      </button>
+    </div>
+  </form>
+</div>

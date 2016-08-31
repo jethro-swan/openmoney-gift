@@ -1,0 +1,14 @@
+{{#currencies}}
+{{#if enabled}}
+<div id="{{currency}}" class="currencies statcard statcard-{{currency_color}} p-a-md m-b">
+  <h1> {{currency_name}} ({{currency}})</h1>
+  <h3 class="statcard-number text-right">
+    BALANCE {{decimal_places balance}}
+
+  </h3>
+  <h3 class="statcard-number text-right">
+    VOLUME {{decimal_places volume}}
+  </h3>
+</div>
+{{/if}}
+{{/currencies}}

@@ -1,0 +1,52 @@
+<div class="navigation col-md-3 sidebar right-border">
+  <nav class="sidebar-nav">
+    <div class="sidebar-header">
+      <button class="nav-toggler nav-toggler-md sidebar-toggler" type="button" data-toggle="collapse" data-target="#nav-toggleable-md">
+        <span class="sr-only">Toggle nav</span>
+      </button>
+      <a class="sidebar-brand" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/transactions">
+        <img id="logo" src="public/assets/images/open-money-gift-text-vector.svg" class="svg img-responsive center-block" alt="Openmoney Logo" style="height: 75px;"/>
+      </a>
+    </div>
+    <div id="nav-toggleable-md" class="nav-toggleable-md collapse">
+      <ul class="nav nav-bordered nav-stacked">
+        <li {{#if_eq page 'patrons'}}class="active"{{/if_eq}}>
+          <a id="patrons" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/patrons" class="nav-padding">
+            <span class="icon icon-v-card icon-padding"></span>
+            Patrons
+          </a>
+        </li>
+        <li {{#if_eq page 'transactions'}}class="active"{{/if_eq}}>
+          <a id="transactions" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/transactions" class="nav-padding">
+            <span class="icon icon-dial-pad icon-padding"></span>
+            Transactions
+          </a>
+        </li>
+        <li {{#if_eq page 'reports'}}class="active"{{/if_eq}}>
+          <a id="reports" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/reports" class="nav-padding">
+            <span class="icon icon-area-graph icon-padding"></span>
+            Reports
+          </a>
+        </li>
+        <li {{#if_eq page 'administrative'}}class="active"{{/if_eq}}>
+          <a id="administrative" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/administrative" class="nav-padding">
+            <span class="icon icon-tools icon-padding"></span>
+            Administrative
+          </a>
+        </li>
+        <li {{#if_eq page 'supplies'}}class="active"{{/if_eq}}>
+          <a id="supplies" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/supplies" class="nav-padding">
+            <span class="icon icon-credit-card icon-padding"></span>
+            Supplies
+          </a>
+        </li>
+        <li {{#if_eq page 'support'}}class="active"{{/if_eq}}>
+          <a id="support" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/support" class="nav-padding">
+            <span class="icon icon-old-phone icon-padding"></span>
+            Tech Support
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</div>

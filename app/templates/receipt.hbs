@@ -1,0 +1,80 @@
+<style>
+@media print {
+  .receipt-buttons {
+    display: none;
+  }
+  .dashhead {
+    display: none;
+  }
+  .navigation {
+    display: none;
+  }
+  .breadcrumbs {
+    display: none;
+  }
+  .receipt {
+    border-bottom: 1px dashed black;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  @page { margin: 0; }
+}
+</style>
+<div class="receipt-buttons col-sm-6 text-center">
+  <div style="padding-top: 10px; padding-bottom:10px;">
+    <button type="button" name="email" class="btn btn-lg btn-primary-outline">Email Receipt</button>
+  </div>
+  <div style="padding-top: 10px; padding-bottom:10px;">
+    <button type="button" name="print" class="btn btn-lg btn-primary-outline">Print Receipt</button>
+  </div>
+  <div style="padding-top: 10px; padding-bottom:10px;">
+    <button type="button" name="void" class="btn btn-lg btn-warning-outline">Void</button>
+  </div>
+  <div style="padding-top: 10px; padding-bottom:10px;">
+    <button type="button" name="done" class="btn btn-lg btn-success-outline">Done</button>
+  </div>
+</div>
+<div class="receipt col-sm-6">
+  <div class="statcard statcard-{{#currencyObject}}{{currency_color}}{{/currencyObject}} p-a-md m-b text-center" style="padding-bottom: 20px;">
+    <div id='merchantname'>{{#merchant}}{{merchantname}}{{/merchant}}</div>
+    <div id='email' style="padding-bottom: 20px;">{{#merchant}}{{email}}{{/merchant}}</div>
+    <div id='action'>
+      <h3>
+        {{#currencyObject}}{{currency_name}}{{/currencyObject}}
+        {{#journal}}{{#if_eq load true}}Load{{else}}Redeem{{/if_eq}}{{/journal}}</h3>
+    </div>
+    <div id='date' class='text-left'>Timestamp: <span style="float:right">{{#journal}}{{prettify_date_short timestamp}}{{/journal}}</span></div>
+    <div id='key' class='text-left'>
+      Card Number:
+      <span style="float:right;">{{#card}}{{obscure key}}{{/card}}</span>
+    </div>
+    <div id='amount' class='text-left' style="padding-top: 20px;">
+      <strong>
+        Transaction Amount:
+        <span style="float:right;">
+            {{#journal}}{{decimal_places amount}}{{/journal}} {{currency}}
+        </span>
+      </strong>
+    </div>
+    <div id='balance' class='text-right' >
+      <strong>
+        <span style="float:left;">
+          Remaining Balance(s):
+        </span>
+        {{#card}}
+          {{#each balances}}
+           <div>{{../decimal_places this}} {{@key}}</div>
+          {{/each}}
+        {{/card}}
+      </strong>
+    </div>
+  </div>
+</div>
