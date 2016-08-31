@@ -224,8 +224,9 @@ module.exports = Marionette.ItemView.extend({
               success: function(model, response){
                 console.log('successfully saved model', model, response);
                 Self.model.set('_id', 'cardholders~' + Self.merchant.get('merchantname') + '~' + Self.model.get('firstname') + '~' + Self.model.get('lastname'));
-                //Self.collection.set(model, {remove: false});
+                Self.collection.set(model, {remove: false});
                 //Self.model.fetch();
+
                 router.navigate('merchants/' + Self.merchant.get('merchantname') + '/patrons/' + Self.model.get('_id'));
 
 
