@@ -2724,8 +2724,10 @@ this["openmoney"]["merchant"] = Handlebars.template({"1":function(container,dept
     + "/administrative/currencies/"
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + "\">"
+    + alias4(((helper = (helper = helpers.currency_name || (depth0 != null ? depth0.currency_name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency_name","hash":{},"data":data}) : helper)))
+    + " ("
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
-    + "</a></td>\n            <td>\n              <div class=\"radio-inline custom-control custom-radio\">\n                <label>\n                  <input type=\"radio\" id=\""
+    + ")</a></td>\n            <td>\n              <div class=\"radio-inline custom-control custom-radio\">\n                <label>\n                  <input type=\"radio\" id=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + "~enable\" name=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
@@ -3341,7 +3343,9 @@ this["openmoney"]["transactions"] = Handlebars.template({"1":function(container,
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + "~button\" class=\"currency-buttons btn btn-lg btn-default-outline action-spacing highlight\" style=\"width: 100%; margin: 0;\">"
     + alias4(((helper = (helper = helpers.currency_name || (depth0 != null ? depth0.currency_name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency_name","hash":{},"data":data}) : helper)))
-    + "</button>\n            <div class=\""
+    + " ("
+    + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
+    + ")</button>\n            <div class=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + " value-buttons\">\n              <button type=\"button\" class=\"btn btn-lg btn-success-outline action-spacing tab-spacing add-value add-value-selected\" style=\"width: 80%; margin: 10px;\">\n                <span class=\"icon icon-plus icon-padding\"></span>\n                ADD VALUE\n              </button>\n              <button type=\"button\" class=\"btn btn-lg btn-danger-outline action-spacing tab-spacing redeem-value\" style=\"width: 80%; margin: 10px;\">\n                <span class=\"icon icon-minus icon-padding\"></span>\n                REDEEM VALUE\n              </button>\n            </div>\n          </td></tr>\n";
 },"4":function(container,depth0,helpers,partials,data) {
