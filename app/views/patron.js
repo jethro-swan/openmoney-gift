@@ -223,11 +223,11 @@ module.exports = Marionette.ItemView.extend({
             Self.model.save({},{
               success: function(model, response){
                 console.log('successfully saved model', model, response);
-                //Self.model.set('_id', );
+                Self.model.set('_id', 'cardholders~' + Self.merchant.get('merchantname') + '~' + Self.model.get('firstname') + '~' + Self.model.get('lastname'));
                 //Self.collection.set(model, {remove: false});
                 //Self.model.fetch();
-                router.navigate('merchants/' + Self.merchant.get('merchantname') + '/patrons/' + 'cardholders~' + Self.merchant.get('merchantname') + '~' + Self.model.get('firstname') + '~' + Self.model.get('lastname'));
-                
+                router.navigate('merchants/' + Self.merchant.get('merchantname') + '/patrons/' + Self.model.get('_id'));
+
 
                 //Backbone.history.navigate('#patrons/patrons~' + Self.merchant.get('merchantname') + '~' + Self.model.get('firstname') + '~' + Self.model.get('lastname'),{trigger:true, replace:true});
                 $('#success-notification').html('Successfully saved patron.').show();
