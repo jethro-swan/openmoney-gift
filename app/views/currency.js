@@ -195,6 +195,9 @@ module.exports = Marionette.ItemView.extend({
                 },
                 currency_namespace: {
                     required: true,
+                },
+                contributionPerPatron: {
+                    number: true
                 }
             },
             messages: {
@@ -206,6 +209,9 @@ module.exports = Marionette.ItemView.extend({
                 },
                 currency_namespace: {
                     required: "Currency namespace is required.",
+                },
+                contributionPerPatron: {
+                     number: "Contribution must be a number",
                 }
             },
             submitHandler: function(form) {
@@ -261,6 +267,7 @@ module.exports = Marionette.ItemView.extend({
             Self.model.set('currency_namespace', Self.merchant.get('merchantname') + '.cc');
             Self.model.set('currency_color', Self.$('input[name=currency_color]').val());
             Self.model.set('currency_name', Self.$('input[name=currency_name]').val());
+            Self.model.set('contributionPerPatron', Self.$('input[name=contributionPerPatron]').val());
 
             //console.log('namespace save', Self.model.toJSON());
             Self.model.credentials = {};

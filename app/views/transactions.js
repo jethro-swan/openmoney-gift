@@ -254,6 +254,7 @@ module.exports = Backbone.View.extend({
 
         data.currency = data.default;
         data.balance = 0;
+        data.polarity = 'load';
         if(typeof Self.key != 'undefined' && typeof Self.collection != 'undefined'){
           Self.card = Self.collection.get('cards~' + Self.merchant.get('merchantname') + '~' + Self.key);
           if(typeof Self.card != 'undefined'){
@@ -684,7 +685,7 @@ module.exports = Backbone.View.extend({
                   console.log('merchantname:', merchantname);
                   console.log('card key:', card_key);
                   Self.$('#qrcode-reader').hide();
-                  $('#reader').html5_qrcode_stop()
+                  $('#reader').html5_qrcode_stop();
                   router.navigate('merchants/' + merchantname + '/transactions/' + card_key);
                 }
               },

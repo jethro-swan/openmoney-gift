@@ -77,6 +77,7 @@ module.exports = Marionette.ItemView.extend({
           data = Self.merchant.toJSON();
         }
         //data.currencies = Self.collection.toJSON();
+        console.log(Self.currencies);
         data.currencies = Self.currencies.getBySteward(Self.merchant.get('merchantname'));
         for(var i = 0; i < data.currencies.length; i ++){
           data.currencies[i] = data.currencies[i].toJSON();

@@ -16,6 +16,7 @@ var ViewHelpers = ViewHelpers(Handlebars)
 var Common = require('../common');
 var Self;
 var Patron = require('../models/patron');
+var QRious = require('qrious');
 
 module.exports = Marionette.ItemView.extend({
 
@@ -55,6 +56,13 @@ module.exports = Marionette.ItemView.extend({
       console.log('create card event fired', event);
       event.preventDefault();
       router.navigate('merchants/' + Self.merchant.get('merchantname') + '/patrons/' + Self.model.get('_id') + '/cards/new');
+    },
+
+    print: function(event){
+      event.preventDefault();
+      console.log('Print event triggered');
+      //render pdf copy of receipt and
+      window.print();
     },
 
     render: function(){
@@ -108,6 +116,33 @@ module.exports = Marionette.ItemView.extend({
 
         console.log('Patron Data:', data);
         this.$el.html(this.template(data));
+
+        Self.$('button[name=print]').off('click').on('click', Self.print);
+
+        for(var i = 0; i < data.cards.length; i++){
+
+          var canvas = document.querySelector('canvas')
+          var qrid = document.getElementById('qr')
+          var qrid = Self.$('#qr' + data.cards[i].key)[0];
+          console.log('qrid:',qrid);
+          var qr = new QRious({
+            element: qrid,
+            value: 'https://openmoney.gift' + '/#merchants/' + Self.merchant.get('merchantname') + '/transactions/' + data.cards[i].key,
+          })
+          // qr.background = '#000'
+          // qr.foreground = '#fff'
+          qr.level = 'H';
+          qr.size = 250;
+
+          //qr.canvas = qrid;
+
+          // console.log('qrcode', qr);
+
+          // if(typeof qr.image != 'undefined'){
+          //   Self.$('qrcode-image').append(qr.image)
+          //   // qr.canvas.parentNode
+          // }
+        }
 
 
         this.$('[data-sort=table]').DataTable({
@@ -184,9 +219,13 @@ module.exports = Marionette.ItemView.extend({
         this.$('button[name=cancel]').off('click').on('click', function(e){
           e.preventDefault();
           console.log('cancel button pressed!');
-          Self.$('#patronForm').hide();
-          Self.$('#statsButton').show();
-          Self.$('#stats').show();
+          if(Self.id == 'new'){
+            router.navigate('merchants/' + Self.merchant.get('merchantname') + '/patrons');
+          } else {
+            Self.$('#patronForm').hide();
+            Self.$('#statsButton').show();
+            Self.$('#stats').show();
+          }
         });
 
         this.$('button[name=upsert]').off('click').on('click', function(e){
@@ -227,11 +266,12 @@ module.exports = Marionette.ItemView.extend({
                 Self.collection.set(model, {remove: false});
                 //Self.model.fetch();
 
+                Self.journals.fetch();
                 router.navigate('merchants/' + Self.merchant.get('merchantname') + '/patrons/' + Self.model.get('_id'));
 
 
                 //Backbone.history.navigate('#patrons/patrons~' + Self.merchant.get('merchantname') + '~' + Self.model.get('firstname') + '~' + Self.model.get('lastname'),{trigger:true, replace:true});
-                $('#success-notification').html('Successfully saved patron.').show();
+                $('#success-notification').html('Thank you for your contribution to Openmoney Development, patron saved.').show();
                 setTimeout(function(){
                   $('#success-notification').hide();
                 },10000);

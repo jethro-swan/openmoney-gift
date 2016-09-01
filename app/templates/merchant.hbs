@@ -42,6 +42,7 @@
           <th>Currency</th>
           <th>Enable or Disable</th>
           <th>Default</th>
+          <th>Contribution Per Patron</th>
         </tr>
       </thead>
       <tbody class="table-rows">
@@ -73,6 +74,9 @@
                   Default
                 </label>
               </div>
+            </td>
+            <td class="text-right">
+              {{decimal_places contributionPerPatron}}
             </td>
           </tr>
           {{/this}}

@@ -52,6 +52,13 @@ module.exports = Marionette.ItemView.extend({
       'sync reset': 'render'
     },
 
+    print: function(event){
+      event.preventDefault();
+      console.log('Print event triggered');
+      //render pdf copy of receipt and
+      window.print();
+    },
+
     processTransaction: function(event){
       console.log('processTransaction event fired:', event);
       event.preventDefault();
@@ -92,6 +99,8 @@ module.exports = Marionette.ItemView.extend({
         console.log('card view data', data);
         Self.$el.html(Self.template(data));
 
+        Self.$('button[name=print]').off('click').on('click', Self.print);
+
         var http = location.protocol;
         var slashes = http.concat("//");
         var host = slashes.concat(window.location.hostname);
@@ -112,8 +121,6 @@ module.exports = Marionette.ItemView.extend({
         //qr.canvas = qrid;
 
         console.log('qrcode', qr);
-
-
 
         if(typeof qr.image != 'undefined'){
           Self.$('qrcode-image').append(qr.image)
@@ -178,9 +185,13 @@ module.exports = Marionette.ItemView.extend({
         this.$('button[name=cancel]').off('click').on('click', function(e){
           e.preventDefault();
           console.log('cancel button pressed!');
-          Self.$('#cardForm').hide();
-          Self.$('#statsButton').show();
-          Self.$('#stats').show();
+          if(Self.card_key == 'new'){
+            router.navigate('merchants/' + Self.merchant.get('merchantname') + '/patrons/' + Self.patrons_id );
+          } else {
+            Self.$('#cardForm').hide();
+            Self.$('#statsButton').show();
+            Self.$('#stats').show();
+          }
         });
 
         this.$('button[name=upsert]').off('click').on('click', function(e){
