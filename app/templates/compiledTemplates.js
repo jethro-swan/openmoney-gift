@@ -975,6 +975,41 @@ this["openmoney"]["stewards"] = Handlebars.template({"1":function(container,dept
     + "      </tbody>\n    </table>\n  </div>\n</div>\n";
 },"useData":true});
 
+this["openmoney"]["supplies"] = Handlebars.template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper;
+
+  return "<div class=\"col-sm-12\" style=\"padding-top: 10px;\">\n  <h1>Supplies</h1>\n\n  <a href=\"#/merchants/"
+    + container.escapeExpression(((helper = (helper = helpers.merchantname || (depth0 != null ? depth0.merchantname : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(depth0 != null ? depth0 : {},{"name":"merchantname","hash":{},"data":data}) : helper)))
+    + "/supplies/templates\">Generate Card Templates</a>\n</div>\n";
+},"useData":true});
+
+this["openmoney"]["templates"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var helper, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function";
+
+  return "  <div id=\"stats\" class=\"statcard statcard-success text-left\" style=\"width:"
+    + alias2(alias1((depths[1] != null ? depths[1].cardWidth : depths[1]), depth0))
+    + "in; height: "
+    + alias2(alias1((depths[1] != null ? depths[1].cardHeight : depths[1]), depth0))
+    + "in;float: left;\">\n    <span class=\"statcard-number\" style=\"float: left\">\n      Card#: <div>"
+    + alias2(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"key","hash":{},"data":data}) : helper)))
+    + "</div>\n    </span>\n    <span id=\"qrcode-image\">\n      <canvas id=\"qr"
+    + alias2(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"key","hash":{},"data":data}) : helper)))
+    + "\" style=\"margin-left: auto; margin-right: 0;\"></canvas>\n    </span>\n  </div>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1, helper, options, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, buffer = 
+  "<style>\n@media print {\n  button[name=showedit] {\n    display: none;\n  }\n  button[name=newCard] {\n    display: none;\n  }\n  button[name=print] {\n    display: none;\n  }\n  .email-link{\n    display: none;\n  }\n  .table-head{\n    display: none;\n  }\n  #dashhead {\n    display: none;\n  }\n  .navigation {\n    display: none;\n  }\n  .breadcrumbs {\n    display: none;\n  }\n  .receipt {\n    border-bottom: 1px dashed black;\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .content {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .container {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  #stats {\n    border: 1px solid black;\n    border-radius: 0;\n    /*margin:5px;*/\n  }\n  .statcard-number {\n    font-size: 10pt;\n    padding:5pt;\n  }\n  #header {\n    display: none;\n  }\n  .form-group {\n    display: none;\n  }\n  @page { margin: 0; }\n}\n</style>\n<div class=\"col-sm-12\" style=\"padding-top: 10px;\">\n  <div id=\"header\">\n    <h1>Generate Templates</h1>\n  </div>\n\n  <div class=\"form-group text-left\">\n    <label for=\"numberOfCards\">Number of Cards:</label>\n    <input type=\"number\" id=\"numberOfCards\" name=\"numberOfCards\" value=\""
+    + alias4(((helper = (helper = helpers.numberOfCards || (depth0 != null ? depth0.numberOfCards : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"numberOfCards","hash":{},"data":data}) : helper)))
+    + "\" placeholder=\"Number Of Cards\" class=\"form-control\" />\n  </div>\n\n  <div class=\"form-group text-left\">\n    <label for=\"width\">Width in inches:</label>\n    <input type=\"number\" id=\"width\" name=\"width\" value=\""
+    + alias4(((helper = (helper = helpers.cardWidth || (depth0 != null ? depth0.cardWidth : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"cardWidth","hash":{},"data":data}) : helper)))
+    + "\" placeholder=\"Width In inches\" class=\"form-control\" />\n  </div>\n\n  <div class=\"form-group text-left\">\n    <label for=\"height\">height in inches:</label>\n    <input type=\"number\" id=\"height\" name=\"height\" value=\""
+    + alias4(((helper = (helper = helpers.cardHeight || (depth0 != null ? depth0.cardHeight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"cardHeight","hash":{},"data":data}) : helper)))
+    + "\" placeholder=\"Height In inches\" class=\"form-control\" />\n  </div>\n\n  <div class=\"text-right\" style=\"padding-bottom: 20px;\">\n    <button type=\"button\" name=\"print\" class=\"btn btn-lg btn-primary-outline\">Print Template</button>\n  </div>\n\n  <div style=\"overflow: hidden;\">\n";
+  stack1 = ((helper = (helper = helpers.cards || (depth0 != null ? depth0.cards : depth0)) != null ? helper : alias2),(options={"name":"cards","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
+  if (!helpers.cards) { stack1 = helpers.blockHelperMissing.call(depth0,stack1,options)}
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "  </div>\n</div>\n";
+},"useData":true,"useDepths":true});
+
 this["openmoney"]["transactions"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
