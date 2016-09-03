@@ -197,7 +197,8 @@ module.exports = Marionette.ItemView.extend({
                     required: true,
                 },
                 contributionPerPatron: {
-                    number: true
+                    number: true,
+                    min: 0
                 }
             },
             messages: {
@@ -212,6 +213,7 @@ module.exports = Marionette.ItemView.extend({
                 },
                 contributionPerPatron: {
                      number: "Contribution must be a number",
+                     min: "Contribution must be positive."
                 }
             },
             submitHandler: function(form) {
