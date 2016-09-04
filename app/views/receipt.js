@@ -36,14 +36,14 @@ module.exports = Marionette.LayoutView.extend({
     data.merchant = Self.merchant.toJSON();
     _.extend(data.merchant, ViewHelpers);
     data.card = Self.collection.get('cards~' + Self.merchant.get('merchantname') + '~' + Self.key);
-    data.currency = 'giftcard';
+    data.currency = 'gifts';
     if(typeof data.card != 'undefined'){
       data.card = data.card.toJSON();
       _.extend(data.card, ViewHelpers);
     }
 
 
-    data.journal = Self.journals.where({'timestamp': parseInt(Self.timestamp), 'key': Self.key});
+    data.journal = Self.journals.where({'timestamp': parseInt(Self.timestamp), 'key': Self.key.toLowerCase()});
     if(data.journal.length == 1){
       data.journal = data.journal[0];
       data.journal = data.journal.toJSON();
