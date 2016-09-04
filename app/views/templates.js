@@ -28,7 +28,7 @@ module.exports = Marionette.LayoutView.extend({
       //Self.listenTo(Self.currencies, 'sync reset', Self.render);
   },
 
-  numberOfCards: 12,
+  numberOfCards: 8,
 
   cardWidth: 3.375,
 
