@@ -9,7 +9,12 @@ require('backbone.basicauth');
 // var BackboneRouteControl = require('backbone-route-control');
 var Marionette = require('backbone.marionette');
 var PouchDB = require('pouchdb');
+require('fruitdown');
 var db = new PouchDB('giftcard');
+if (!db.adapter) { // websql not supported by this browser
+  console.log('failed to load default websql or indexdb');
+  db = new PouchDB('giftcard', {adapter: 'fruitdown'});
+}
 var Common = require('../common');
 var async = require('async');
 
@@ -311,6 +316,7 @@ module.exports = Marionette.AppRouter.extend({
       })
     }).catch(function(error){
       console.log("allDocs error: ", error);
+      Self.navigate('#login');
     });
     // db.destroy().then(function () {
     //   // database destroyed
@@ -572,6 +578,11 @@ module.exports = Marionette.AppRouter.extend({
           var merchant = new Merchant();
           if(error){
             console.log('error getting merchant from pouchdb',error);
+            if(error == 'Adapter is missing'){
+
+            }
+            //console.log('adapters'. PouchDB.adapters);
+            console.log('pouchdb adapter',db.adapter);
           } else {
             merchant = new Merchant(doc.merchant);
             // merchant.set('_id', 'merchants~' + doc.username);
@@ -606,6 +617,8 @@ module.exports = Marionette.AppRouter.extend({
           var employee = new Employee();
           if(error){
             console.log('error getting employee from pouchdb',error);
+            console.log('pouchdb adapter',db.adapter);
+            console.log('pouchdb adapters', Object.keys(PouchDB.adapters))
           } else {
             employee = new Employee(doc.employee);
             employee.set('merchant', Self.merchant);

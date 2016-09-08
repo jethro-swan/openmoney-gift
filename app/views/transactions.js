@@ -16,6 +16,8 @@ var Self = {};
 var QrCode = require('qrcode-reader');
 var qrcode = new QrCode();
 var html5_qrcode = require('html5-qrcode');
+var getUserMedia = require("browsernizr/test/webrtc/getusermedia");
+var Modernizr = require('browsernizr');
 
 //http://stackoverflow.com/questions/2897155/get-cursor-position-in-characters-within-a-text-input-field
 (function($) {
@@ -235,6 +237,70 @@ module.exports = Backbone.View.extend({
       });
     },
 
+    handleFiles: function(files){
+      console.log('in handleFiles', files);
+      if(typeof files != 'undefined'){
+
+        qrcode.callback = function (result) {
+          console.log('result', result);
+          if(typeof result == 'undefined'){
+            console.log('error decoding qrcode');
+            $('#qr-error-notification').html('Error reading QR code, please try again.').show();
+            setTimeout(function(){
+              $('#qr-error-notification').hide();
+            },10000);
+          } else {
+            var parser = document.createElement('a');
+            // parser.href = "http://example.com:3000/pathname/?search=test#hash";
+            parser.href = result;
+            parser.protocol; // => "http:"
+            parser.hostname; // => "example.com"
+            parser.port;     // => "3000"
+            parser.pathname; // => "/pathname/"
+            parser.search;   // => "?search=test"
+            parser.hash;     // => "#hash"
+            parser.host;     // => "example.com:3000"
+            console.log('hash', parser.hash);
+            var parts = parser.hash.split('/');
+            var merchantname = parts[1];
+            var card_key = parts[3];
+            console.log('merchantname:', merchantname);
+            console.log('card key:', card_key);
+
+            router.navigate('merchants/' + merchantname + '/transactions/' + card_key);
+          }
+        };
+        var w = 270;
+        var h = 250;
+        //var gCtx = null;
+        //var gCanvas = null;
+        //var gCanvas = document.getElementById("outCanvas");
+        var gCanvas = Self.$('#outCanvas')[0];
+        // gCanvas.style.width = w + "px";
+        // gCanvas.style.height = h + "px";
+        gCanvas.width = w;
+        gCanvas.height = h;
+        console.log('gCanvas:',gCanvas);
+        var gCtx = gCanvas.getContext("2d");
+        gCtx.clearRect(0, 0, w, h);
+        var o=[];
+        for(var i = 0; i < files.length; i++){
+          var reader = new FileReader();
+          reader.onload = (function(theFile) {
+            return function(e) {
+              console.log('e', e);
+              gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+      			  qrcode.decode(e.target.result);
+              // var img = document.createElement('img');
+              // img.src = e.target.result;
+              // gCtx.drawImage(img,0,0);
+            };
+          })(files[i]);
+          reader.readAsDataURL(files[i]);
+        }
+      }
+    },
+
     render: function(){
         console.log("render transactions view: ", Self.key, Self.merchant);
 
@@ -444,12 +510,12 @@ module.exports = Backbone.View.extend({
           event.preventDefault();
           console.log('clicked on card input');
           $('#card').addClass('card-highlight');
-          Self.activeInput = 'card';
-          if(hasSoftKeyboard()){
-            $('#card').blur();
-          } else {
-            $('#card').focus();
-          }
+          // Self.activeInput = 'card';
+          // if(hasSoftKeyboard()){
+          //   $('#card').blur();
+          // } else {
+          //   $('#card').focus();
+          // }
         })
 
         Self.$('#card').off('change').on('change', function(event){
@@ -647,25 +713,40 @@ module.exports = Backbone.View.extend({
           console.log('qrcode event');
           Self.$('#qrcode-reader').show();
 
+          console.log('getUserMedia:', Modernizr.getusermedia);
+
           Self.$('button.close').off('click').on('click', function(event){
             event.preventDefault();
             console.log('close modal');
             Self.$('#qrcode-reader').hide();
-            $('#reader').html5_qrcode_stop()
-          })
+            if(Modernizr.getusermedia){
+              $('#reader').html5_qrcode_stop()
+            }
+          });
 
           Self.$('button.cancel').off('click').on('click', function(event){
             event.preventDefault();
             console.log('cancel modal');
             Self.$('#qrcode-reader').hide();
-            $('#reader').html5_qrcode_stop()
-          })
+            if(Modernizr.getusermedia){
+              $('#reader').html5_qrcode_stop()
+            }
+          });
 
 
-
-          $('#reader').html5_qrcode(function(data){
+          //switch this when it's debugged.
+          if(!Modernizr.getusermedia){
+            console.log('getUserMedia test failed.')
+            Self.$('#qrfile').show();
+            Self.$('#reader').hide();
+            Self.$('#qrfile').off('change', 'input#qrfiles').on('change', 'input#qrfiles', function(event){
+              console.log('qrfiles change event', event);
+              Self.handleFiles(this.files);
+            });
+          } else {
+            $('#reader').html5_qrcode(function(data){
                 // do something when code is read
-                console.log("Data:",data)
+                console.log("Data:", data);
                 if(typeof data != 'undefined'){
                   var parser = document.createElement('a');
                   // parser.href = "http://example.com:3000/pathname/?search=test#hash";
@@ -696,8 +777,8 @@ module.exports = Backbone.View.extend({
                 //the video stream could be opened
                 console.log("Video Error:",videoError)
               }
-          );
-
+            );
+          }
         })
 
         setTimeout(function(){
