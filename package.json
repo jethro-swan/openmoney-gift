@@ -19,7 +19,7 @@
     "jquery-validation": "./node_modules/jquery-validation/dist/jquery.validate.js",
     "backbone": "./node_modules/backbone/backbone.js",
     "underscore": "./node_modules/underscore/underscore.js",
-    "toolkit": "./public/assets/theme-dashboard/dist/toolkit.js",
+    "toolkit": "./public/assets/dashboard/toolkit.js",
     "tablesorter": "./public/assets/js/jquery.tablesorter.js",
     "tablesorterPager": "./public/assets/js/jquery.tablesorter.pager.js",
     "jquery.browser": "./node_modules/jquery.browser/dist/jquery.browser.min.js",

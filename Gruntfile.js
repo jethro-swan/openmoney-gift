@@ -196,7 +196,7 @@ module.exports = function(grunt) {
     });
 
 
-    grunt.registerTask('compile', ['handlebars', 'browserify', 'copy', 'stylus', 'mocha', 'watch']);
+    grunt.registerTask('compile', ['handlebars', 'browserify', 'copy', 'stylus', 'watch']);
 
     // Run the server and watch for file changes
     grunt.registerTask('server', ['compile', 'runNode', 'watch']);

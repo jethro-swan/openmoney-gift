@@ -229,7 +229,7 @@ module.exports = Marionette.AppRouter.extend({
     Self.initializeData(function(err, data){
       if(Self.merchant.get('merchantname') == ''){
         Self.page.set('currentPage', 'welcome');
-        Self.changePage(new WelcomeView(),{changeHash:false, transition: "none"});
+        Self.changePage(new WelcomeView(),{pageName: 'welcome'});
       } else {
         Self.navigate('merchants/' + Self.merchant.get('merchantname') + '/transactions', true);
       }
@@ -792,7 +792,38 @@ module.exports = Marionette.AppRouter.extend({
 		console.info('changePage called', page, options);
     Self.CurrentView = page; //keep a local reference
     Self.layout.getRegion('pageContainer').show(Self.CurrentView);
-	}
+    if(typeof options != 'undefined' && typeof options.pageName != 'undefined' && options.pageName == 'welcome' && Self.marketing == false){
+      Self.marketingOn();
+    } else {
+      if(Self.marketing == true){
+        Self.marketingOff();
+      }
+    }
+	},
+
+  marketing : false,
+
+  marketingOn : function(){
+    console.log('marketing on');
+    $('link.dashboard').prop('disabled', true);
+    $('link.marketing').prop('disabled', false);
+    $('#mainContainer').removeClass('container');
+    $('#page').removeClass('content').removeClass('col-md-8');
+    $('#body').css('padding-top', 0);
+    $('#body').css('padding-bottom', 0);
+    Self.marketing = true;
+  },
+
+  marketingOff : function(){
+    console.log('marketing off');
+    $('link.dashboard').prop('disabled', false);
+    $('link.marketing').prop('disabled', true);
+    $('#mainContainer').addClass('container');
+    $('#page').addClass('content').addClass('col-md-8');
+    $('#body').css('padding-top', '20px');
+    $('#body').css('padding-bottom', '20px');
+    Self.marketing = false;
+  }
 
 });
 
