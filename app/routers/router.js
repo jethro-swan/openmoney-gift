@@ -6,6 +6,7 @@ var _ = require('underscore');
 var Backbone = require('backbone');
 Backbone.$ = $;
 require('backbone.basicauth');
+var oauth = require('../helpers/oauth');
 // var BackboneRouteControl = require('backbone-route-control');
 var Marionette = require('backbone.marionette');
 var PouchDB = require('pouchdb');
@@ -17,19 +18,6 @@ if (!db.adapter) { // websql not supported by this browser
 }
 var Common = require('../common');
 var async = require('async');
-
-// $(document).bind("mobileinit", function () {
-// 	// console.info("disable jquery.mobile routing");
-// 	// $.mobile.ajaxEnabled = false;
-// 	// $.mobile.linkBindingEnabled = false;
-// 	// $.mobile.hashListeningEnabled = false;
-// 	// $.mobile.pushStateEnabled = false;
-//
-// 	// Remove page from DOM when it's being replaced
-// 	// $('div[data-role="page"]').live('pagehide', function (event, ui) {
-// 	// 	$(event.currentTarget).remove();
-// 	// });
-// });
 
 //set the viewport scale
 //http://stackoverflow.com/questions/11592015/support-for-target-densitydpi-is-removed-from-webkit
@@ -60,6 +48,7 @@ var CurrencyView = require('../views/currency');
 var EmployeeView = require('../views/employee');
 var SuppliesView = require('../views/supplies');
 var TemplatesView = require('../views/templates');
+var BalanceView = require('../views/balance');
 
 //models
 var Merchant = require('../models/merchant');
@@ -134,6 +123,9 @@ module.exports = Marionette.AppRouter.extend({
     app.getRegion('mainContainer').show(Self.layout);
 
     Self.initializeData(function(err, data){
+      if(typeof Self.merchant.get('theme') != 'undefined' && Self.merchant.get('theme') == 'light'){
+        Self.lightTheme();
+      }
       console.log('initializeData', err, data);
       Self.layout.getRegion('navigation').show(new NavigationView({model: Self.page, merchant: Self.merchant}));
       Self.dashhead = new DashheadView({model: Self.page, merchant: Self.merchant, employees: Self.employeesCollection, employee: Self.employeeModel});
@@ -150,7 +142,7 @@ module.exports = Marionette.AppRouter.extend({
 		'': 'welcome',
 		'login': 'login',
     'logout': 'logout',
-		'register': 'register',
+		'signup': 'register',
 		'forgot': 'forgot',
     'forgot/:merchantname/:forgot_token': 'reset',
 		'merchants/:merchantname/patrons': 'patrons',
@@ -165,7 +157,7 @@ module.exports = Marionette.AppRouter.extend({
     'merchants/:merchantname/administrative': 'administrative',
     'merchants/:merchantname/administrative/currencies/:currencyName': 'currency',
     'merchants/:merchantname/administrative/employee/:name': 'employee',
-    'merchants/:merchantname/supplies': 'supplies',
+    'merchants/:merchantname/supplies': 'templates',
     'merchants/:merchantname/supplies/templates': 'templates'
 	},
 
@@ -262,33 +254,36 @@ module.exports = Marionette.AppRouter.extend({
       console.log("allDocs", docs);
 
       var parallel = {};
-      //delete all docs
-      if(typeof docs.rows != 'undefined'){
-        for(var i = 0; i < docs.rows.length; i++){
-          console.log('doc:',docs.rows[i]);
-          var doc = docs.rows[i];
-          console.log('id', doc.id);
-          console.log('rev', doc.value.rev);
-          parallel[i] = function(callback){
-            db.remove(doc.id, doc.value.rev).then(function(results){
-              console.log(results);
-              callback(null, results);
-            }).catch(function(error){
-              console.log(error);
-              callback(error);
-            });
-          };
-        }
-      }
+
+      docs.rows.forEach(function(row){
+        parallel[row.id] = function(callback){
+          console.log('row.id', row.id);
+          db.get(row.id, function(err, document){
+            if(err){
+              callback(err);
+            } else {
+              console.log(document);
+              db.remove(document._id, document._rev).then(function(results){
+                console.log(results);
+                callback(null, results);
+              }).catch(function(error){
+                console.log(error);
+                callback(error);
+              });
+            }
+          })
+        };
+      });
 
       async.parallel(parallel, function(err, res){
         if(err){
-          console.log(err);
+          console.log('error removing docs: ',err);
         } else {
-          console.log(res);
+          console.log("results: ",res);
           db.compact().then(function(result){
             console.log('destoryed local db!');
-
+            oauth.invalidateCache(Self.merchant.get('merchantname'));
+            console.log('delete memory');
             delete Self.merchant;
             delete Self.cardsCollection;
             delete Self.patronsCollection;
@@ -297,6 +292,7 @@ module.exports = Marionette.AppRouter.extend({
             delete Self.journals;
             delete Self.employeeModel;
 
+            Self.darkTheme();
             //db = new PouchDB('giftcard');
             Self.page = new Page();
             Self.layout = new LayoutView();
@@ -311,6 +307,7 @@ module.exports = Marionette.AppRouter.extend({
             Self.navigate('#login');
           }).catch(function(err){
             console.log(err);
+            Self.navigate('#login');
           })
         }
       })
@@ -318,33 +315,6 @@ module.exports = Marionette.AppRouter.extend({
       console.log("allDocs error: ", error);
       Self.navigate('#login');
     });
-    // db.destroy().then(function () {
-    //   // database destroyed
-    //   console.log('destoryed local db!');
-    //
-    //   delete Self.merchant;
-    //   delete Self.cardsCollection;
-    //   delete Self.patronsCollection;
-    //   delete Self.journals;
-    //
-    //   //db = new PouchDB('giftcard');
-    //   Self.page = new Page();
-    //   Self.layout = new LayoutView();
-    //   app.getRegion('mainContainer').show(Self.layout);
-    //   Self.initializeData(function(err, data){
-    //     console.log('initializeData', err, data);
-    //     Self.layout.getRegion('navigation').show(new NavigationView({model: Self.page, merchant: Self.merchant}));
-    //     Self.dashhead = new DashheadView({model: Self.page, merchant: Self.merchant, employees: Self.employeesCollection, employee: Self.employeeModel});
-    //     Self.layout.getRegion('dashhead').show(Self.dashhead);
-    //   });
-    //
-    //   Self.navigate('#login');
-    //   //may have to recreate db.
-    // }).catch(function (err) {
-    //   // error occurred
-    //   console.log('could not destroy local db', err);
-    //   Self.navigate('#login');
-    // })
   },
   register: function() {
 		console.log('Goto: RegisterView');
@@ -382,18 +352,36 @@ module.exports = Marionette.AppRouter.extend({
 	transactions: function(merchantname, key) {
 		console.log('Goto: TransactionsView', merchantname, key);
     Self.initializeData(function(err, res){
-      Self.page.set('currentPage', 'transactions');
-      Self.page.set('title', 'Process Transactions');
-      var breadcrumbs = [{linkText: 'Process Transactions'},
-                      {active: true, linkText: key}];
-      var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
-      var breadcrumbRegion = Self.dashhead.getRegion('breadcrumbs');
-      if(typeof breadcrumbRegion != 'undefined'){
-        breadcrumbRegion.reset();
-        breadcrumbRegion.show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
+      if(typeof Self.merchant != 'undefined' && Self.merchant.get('merchantname') == merchantname){
+        Self.page.set('currentPage', 'transactions');
+        Self.page.set('title', 'Process Transactions');
+        var breadcrumbs = [{linkText: 'Process Transactions'},
+                        {active: true, linkText: key}];
+        var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
+        var breadcrumbRegion = Self.dashhead.getRegion('breadcrumbs');
+        if(typeof breadcrumbRegion != 'undefined'){
+          breadcrumbRegion.reset();
+          breadcrumbRegion.show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
+        }
+        Self.changePage(new TransactionsView( { merchant: Self.merchant, collection: Self.cardsCollection, journals: Self.journals, currencies: Self.currenciesCollection, employee: Self.employeeModel, key: key} ), {changeHash:false, transition: "none"});
+      } else if(typeof key != 'undefined' && key != ''){
+        //Merchant is not logged in so this is a public view of the card.
+        Self.page.set('currentPage', 'balance');
+        Self.page.set('title', 'Balance');
+        var breadcrumbs = [{linkText: 'Balance'},
+                        {active: true, linkText: key}];
+        var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
+        var breadcrumbRegion = Self.dashhead.getRegion('breadcrumbs');
+        if(typeof breadcrumbRegion != 'undefined'){
+          breadcrumbRegion.reset();
+          breadcrumbRegion.show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
+        }
+        Self.navigationOff();
+        Self.changePage(new BalanceView({ merchantname: merchantname, key: key }),{pageName: 'balance'});
+      } else {
+        //merchant isn't logged in and card is not defined.
+        Self.welcome();
       }
-      console.log('Self.currenciesCollection', Self.currenciesCollection);
-      Self.changePage(new TransactionsView( { merchant: Self.merchant, collection: Self.cardsCollection, journals: Self.journals, currencies: Self.currenciesCollection, employee: Self.employeeModel, key: key} ), {changeHash:false, transition: "none"});
     })
 	},
   receipt: function(merchantname, key, timestamp) {
@@ -585,9 +573,6 @@ module.exports = Marionette.AppRouter.extend({
             console.log('pouchdb adapter',db.adapter);
           } else {
             merchant = new Merchant(doc.merchant);
-            // merchant.set('_id', 'merchants~' + doc.username);
-            // merchant.set('merchantname', doc.username);
-            // merchant.set('password', doc.password);
             merchant.credentials = {};
             merchant.credentials.password = merchant.get('password');
             merchant.credentials.username = merchant.get('merchantname');
@@ -760,29 +745,6 @@ module.exports = Marionette.AppRouter.extend({
       }
     };
 
-    // parallel.stewards = function(callback){
-    //   if(typeof Self.steward == 'undefined' || Self.steward.get('stewardname') == ''){
-    //     callback(null, null);
-    //   } else {
-    //     if(typeof Self.stewardsCollection != 'undefined'){
-    //       callback(null, Self.stewardsCollection);
-    //     } else {
-    //       Self.stewardsCollection = new Stewards();
-    //       Self.stewardsCollection.credentials = {};
-    //       Self.stewardsCollection.credentials.token = Self.merchant.get('access_token');
-    //       Self.stewardsCollection.fetch({
-    //         success: function(collection, response){
-    //           console.log('successfully fetched stewards collection', collection, response);
-    //         },
-    //         error: function(collection, response){
-    //           console.log('failed to fetched stewards collection', collection, response);
-    //         }
-    //       });
-    //       callback(null, Self.stewardsCollection);
-    //     }
-    //   }
-    // };
-
     async.series(localdb, function(err, localdbResults){
       async.parallel(parallel, done);
     });
@@ -803,9 +765,23 @@ module.exports = Marionette.AppRouter.extend({
 
   marketing : false,
 
+  lightTheme : function(){
+    console.log('router.lightTheme');
+    $('link.dashboardDarkTheme').prop('disabled', true);
+    $('link.dashboardLightTheme').prop('disabled', false);
+    $('body').css('background-color', '#FFFFFF')
+  },
+
+  darkTheme : function(){
+    console.log('router:darkTheme');
+    $('link.dashboardDarkTheme').prop('disabled', false);
+    $('link.dashboardLightTheme').prop('disabled', true);
+    $('body').css('background-color', '#202020')
+  },
+
   marketingOn : function(){
     console.log('marketing on');
-    $('link.dashboard').prop('disabled', true);
+    $('link.dashboard-darkTheme').prop('disabled', true);
     $('link.marketing').prop('disabled', false);
     $('#mainContainer').removeClass('container');
     $('#page').removeClass('content').removeClass('col-md-8');
@@ -816,14 +792,24 @@ module.exports = Marionette.AppRouter.extend({
 
   marketingOff : function(){
     console.log('marketing off');
-    $('link.dashboard').prop('disabled', false);
+    $('link.dashboard-darkTheme').prop('disabled', false);
     $('link.marketing').prop('disabled', true);
     $('#mainContainer').addClass('container');
     $('#page').addClass('content').addClass('col-md-8');
     $('#body').css('padding-top', '20px');
     $('#body').css('padding-bottom', '20px');
     Self.marketing = false;
-  }
+  },
+
+  navigationOff : function(){
+    console.log('app.router.navigationOff');
+    $('#navigation').hide();
+  },
+
+  navigationOn : function(){
+    console.log('app.router.navigationOn');
+    $('#navigation').show();
+  },
 
 });
 

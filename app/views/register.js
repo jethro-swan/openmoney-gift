@@ -146,7 +146,7 @@ module.exports = Backbone.View.extend({
                 done();
               }
               Backbone.history.navigate('#login',{trigger:true, replace:false});
-              $('#success-notification').html('Successfully Registered New Merchant.').show();
+              $('#success-notification').html('Successfully Signed Up New Merchant.').show();
               setTimeout(function(){
                 $('#success-notification').hide();
               },10000);

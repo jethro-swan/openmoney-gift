@@ -24,7 +24,11 @@ module.exports = Backbone.Model.extend({
         //use the id attribute for update because the id has not been modified.
         options.url = '/V1/merchants/' + model.get('merchant').get('merchantname') + '/cards/' + model.get('_id').split('~')[2];
       } else {
-        options.url = '/V1/merchants/' + model.get('merchant').get('merchantname') + '/cards/' + model.get('key');
+        if(typeof model.get('merchant') != 'undefined'){
+          options.url = '/V1/merchants/' + model.get('merchant').get('merchantname') + '/cards/' + model.get('key');
+        } else if (typeof model.get('merchantname') != 'undefined'){
+          options.url = '/V1/merchants/' + model.get('merchantname') + '/cards/' + model.get('key') + '/balance';
+        }
       }
 
       return Backbone.sync.apply(this, arguments);

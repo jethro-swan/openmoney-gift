@@ -1,0 +1,106 @@
+<style>
+[data-sort=table] > tbody > tr:hover{
+  background-color: #159c6e;
+  cursor: pointer;
+}
+@media print {
+  button[name=showedit] {
+    display: none;
+  }
+  button[name=newTransaction] {
+    display: none;
+  }
+  button[name=print] {
+    display: none;
+  }
+  .card-history{
+    display: none;
+  }
+  .email-link{
+    display: none;
+  }
+  .table-head{
+    display: none;
+  }
+  #dashhead {
+    display: none;
+  }
+  .navigation {
+    display: none;
+  }
+  .breadcrumbs {
+    display: none;
+  }
+  .receipt {
+    border-bottom: 1px dashed black;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  @page { margin: 0; }
+}
+</style>
+<div class="col-sm-12" style="padding-top: 10px;">
+
+  <div id="statsButton" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="print" class="btn btn-lg btn-primary-outline">Print Card</button>
+    <button type="button" name="showedit" class="btn btn-lg btn-primary-outline" >
+      <strong>Edit</strong>
+    </button>
+  </div>
+  <div id="stats" class="statcard statcard-success p-a-md m-b text-left">
+    <span class="statcard-number" style="float: left">
+      <h1>Card#: {{key}}</h1>
+      <div><h2 class="statcard-number text-left">BALANCE</h2></div>
+      {{#each balances}}
+        {{#if this}}
+        <div><h3 class="statcard-number text-left">
+        {{../decimal_places this}} {{@key}}
+        </h3></div>
+        {{/if}}
+      {{/each}}
+    </span>
+    <span id="qrcode-image">
+      <canvas id="qr" style="margin-left: auto; margin-right: 0;"></canvas>
+    </span>
+  </div>
+  <div class="card-history">
+    <h2><strong>Card History</strong></h2>
+    <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
+      <button type="button" name="newTransaction" class="btn btn-lg btn-success-outline" >
+        <strong>Process Transaction</strong>
+      </button>
+    </div>
+    <div class="table-full">
+      <table class="table" data-sort="basic">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Load or Redeem</th>
+            <th>Amount</th>
+            <th>Currency</th>
+          </tr>
+        </thead>
+        <tbody class="table-rows">
+          {{#each journals}}
+            {{#this}}
+            <tr id="{{_id}}">
+              <td>{{prettify_date timestamp}}</td>
+              <td>{{#load}}Load{{/load}}{{#redeem}}Redeem{{/redeem}}</td>
+              <td>{{decimal_places amount}}</td>
+              <td>{{currency}}</td>
+            </tr>
+            {{/this}}
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

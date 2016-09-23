@@ -130,27 +130,11 @@ function RefreshToken(merchantname, refresh_token, callback){
   $.ajax(options);
 }//RefreshToken
 
-exports.invalidateCache = function (merchantname, callback){
-  if(typeof cache[merchantname] != undefined){
+exports.invalidateCache = function (merchantname){
+  if(typeof merchantname != 'undefined' && typeof cache[merchantname] != 'undefined'){
     delete(cache[merchantname].access_token);
     delete(cache[merchantname].refresh_token);
     delete(cache[merchantname].expires);
     delete(cache[merchantname]);
   }
-
-  // // merchants.findByStewardId('merchants~' + merchantname, function(err, merchant){
-  //   if(err){
-  //     callback(err);
-  //   } else {
-  //     console.log(merchant)
-  //     delete(merchant.access_token);
-  //     delete(merchant.refresh_token);
-  //     delete(merchant.expires);
-  //     console.log(merchant)
-  //     merchants.updateSteward(merchant, function(err, ok){
-  //       console.log([err,ok]);
-  //       callback(err, ok);
-  //     });
-  //   }//else err
-  // });//findByStewardId
 }//invalidateCache

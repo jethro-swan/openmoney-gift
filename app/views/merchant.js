@@ -18,6 +18,13 @@ var Common = require('../common');
 var Self;
 var Merchant = require('../models/merchant');
 var Currency = require('../models/currency');
+var PouchDB = require('pouchdb');
+require('fruitdown');
+var db = new PouchDB('giftcard');
+if (!db.adapter) { // websql not supported by this browser
+  console.log('failed to load default websql or indexdb');
+  db = new PouchDB('giftcard', {adapter: 'fruitdown'});
+}
 
 module.exports = Marionette.ItemView.extend({
 
@@ -90,44 +97,14 @@ module.exports = Marionette.ItemView.extend({
           //data.employees[i] = data.employees[i].toJSON();
         }
 
-        //data.currencies = [{currency: 'gift', enabled:true, default: true}, {currency: 'promo', enabled:true}, {currency: 'points', enabled:true}, {currency: 'tab', enabled:true}, {currency: 'stamp', enabled:true}];
-        // data.accounts = Self.accounts.getBySteward(Self.stewardname);
-        // for(var i = 0; i < data.accounts.length; i++){
-        //   data.accounts[i] = data.accounts[i].toJSON();
-        //   data.accounts[i].accountName = data.accounts[i].account + (data.accounts[i].account_namespace == '' ? '' : '.' + data.accounts[i].account_namespace);
-        //   data.accounts[i].currencyName = data.accounts[i].currency + (data.accounts[i].currency_namespace == '' ? '' : '.' + data.accounts[i].currency_namespace);
-        //   _.extend(data.accounts[i], ViewHelpers);
-        // }
-        // data.currencies = Self.currencies.getBySteward(Self.stewardname);
-        // console.log('currencies getBySteward', data.currencies);
-        // for(var i = 0; i < data.currencies.length; i++){
-        //   data.currencies[i] = data.currencies[i].toJSON();
-        //   data.currencies[i].currencyName = data.currencies[i].currency + (data.currencies[i].currency_namespace == '' ? '' : '.' + data.currencies[i].currency_namespace);
-        //   for(var j = 0; j < data.currencies[i].stewards.length; j++){
-        //     console.log('lookup currency steward:', data.currencies[i].stewards[j]);
-        //     data.currencies[i].stewards[j] = Self.collection.get(data.currencies[i].stewards[j]);
-        //     if(typeof data.currencies[i].stewards[j] != 'undefined'){
-        //       data.currencies[i].stewards[j] = data.currencies[i].stewards[j].toJSON();
-        //     }
-        //     console.log('result steward:', data.currencies[i].stewards[j]);
-        //   }
-        //   _.extend(data.currencies[i], ViewHelpers);
-        // }
-        // data.namespaces = Self.namespaces.getBySteward(Self.stewardname);
-        // for(var i = 0; i < data.namespaces.length; i++){
-        //   data.namespaces[i] = data.namespaces[i].toJSON();
-        //   for(var j = 0; j < data.namespaces[i].stewards.length; j++){
-        //     console.log('lookup namespaces steward:', data.namespaces[i].stewards[j]);
-        //     data.namespaces[i].stewards[j] = Self.collection.get(data.namespaces[i].stewards[j]);
-        //     if(typeof data.namespaces[i].stewards[j] != 'undefined'){
-        //       data.namespaces[i].stewards[j] = data.namespaces[i].stewards[j].toJSON();
-        //     }
-        //     console.log('result steward:', data.namespaces[i].stewards[j]);
-        //   }
-        //   _.extend(data.namespaces[i], ViewHelpers);
-        // }
         console.log('merchant Data:', data);
 
+        if(typeof Self.merchant.get('theme') == 'undefined'){
+          data.theme = 'dark';
+        } else {
+          data.theme = Self.merchant.get('theme');
+        }
+        _.extend(data, ViewHelpers);
         this.$el.html(this.template(data));
 
         Self.$('#logout-button').off('click').on('click', function(event){
@@ -413,6 +390,47 @@ module.exports = Marionette.ItemView.extend({
               }
             })
           }
+        });
+
+        Self.$('#lighttheme').off('click').on('click', function(event){
+          $('.dashboardDarkTheme').prop('disabled', true);
+          $('.dashboardLightTheme').prop('disabled', false);
+          $('body').css('background-color', '#ffffff');
+
+          db.get('config~credentials', function(error, doc){
+            console.log('config~credentials:', error, doc)
+            if(error){
+              return console.log('error getting steward from pouchdb',error);
+            }
+            doc.merchant.theme = 'light';
+            Self.merchant.set('theme', 'light');
+            console.log('doc', doc);
+            db.put(doc, function(error, result){
+              if(error) { console.log(error) } else {
+                console.log('successfully updated config~credentials doc', result);
+              }
+            });
+          });
+        });
+
+        Self.$('#darktheme').off('click').on('click', function(event){
+          $('.dashboardLightTheme').prop('disabled', true);
+          $('.dashboardDarkTheme').prop('disabled', false);
+          $('body').css('background-color', '#202020');
+          db.get('config~credentials', function(error, doc){
+            console.log('config~credentials:', error, doc)
+            if(error){
+              return console.log('error getting steward from pouchdb',error);
+            }
+            doc.merchant.theme = 'dark';
+            Self.merchant.set('theme', 'dark');
+            console.log('doc', doc);
+            db.put(doc, function(error, result){
+              if(error) { console.log(error) } else {
+                console.log('successfully updated config~credentials doc', result);
+              }
+            });
+          });
         });
 
         // this.$('[data-sort=table].accounts > tbody > tr').off('click').on('click', function(event){

@@ -29,6 +29,23 @@
   </form>
 
   {{#if _id}}
+  <h2><strong>Settings</strong></h2>
+  <div class="radio-settings" style="padding-bottom: 20px;">
+    <div class="radio-inline custom-control custom-radio">
+      <label>
+        <input type="radio" id="lighttheme" name="theme" value="light" {{#if_eq theme 'light'}}checked="checked"{{/if_eq}}>
+        <span class="custom-control-indicator"></span>
+        Light Theme
+      </label>
+    </div>
+    <div class="radio-inline custom-control custom-radio">
+      <label>
+        <input type="radio" id="darktheme" name="theme" value="dark" {{#if_eq theme 'dark'}}checked="checked"{{/if_eq}}>
+        <span class="custom-control-indicator"></span>
+        Dark Theme
+      </label>
+    </div>
+  </div>
   <h2><strong>Currencies</strong></h2>
   <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
     <button type="button" name="newCurrency" class="btn btn-lg btn-success-outline" >

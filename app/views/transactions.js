@@ -190,51 +190,60 @@ module.exports = Backbone.View.extend({
       var currency = Self.$('input[name=currency]').val();
       var polarity = Self.$('input[name=polarity]').val();
       Self.card = Self.collection.get('cards~' + Self.merchant.get('merchantname') + '~' + key);
-      console.log('process transaction event', key, amount, currency, polarity, Self.card);
+      if(typeof Self.card == 'undefined'){
+        //set error message for user to select card.
+        $('#error-notification').html('You must enter a valid patrons card number.').show();
+        setTimeout(function(){
+          $('#error-notification').hide();
+        },10000);
+      } else {
 
-      var journal = new Journal();
-      journal.set('key', key);
-      journal.set('polarity', polarity);
-      journal.set('currency', currency);
-      journal.set('amount', parseFloat(amount))
-      //journal.set(currency, parseFloat(amount));
-      journal.set('card', Self.card);
-      journal.set('merchant', Self.merchant);
-      journal.set('cardholderID', Self.card.get('cardholderID'));
-      if(typeof Self.employee != 'undefined'){
-        journal.set('employeeID', Self.employee.get('name'));
-      }
-      journal.credentials = {};
-      journal.credentials.username = Self.merchant.get('merchantname');
-      journal.credentials.password = Self.merchant.get('password');
-      journal.save({},{
-        success: function(model, res){
-          console.log('successfully saved journal', model, res);
-          $('#success-notification').html('Successfully Processed Transaction.').show();
-          setTimeout(function(){
-            $('#success-notification').hide();
-          },10000);
-          Self.collection.fetch();
-          Self.journals.fetch();
-          //display receipt
-          router.navigate('#/merchants/' + Self.merchant.get('merchantname') + '/transactions/' + key + '/receipt/' + res.timestamp, true);
-        },
-        error: function(model, res){
-          if(typeof res.responseJSON != 'undefined' && typeof res.responseJSON.message != 'undefined' ){
-            console.info(res.responseJSON.message);
-            $('#error-notification').html(res.responseJSON.message).show();
-            setTimeout(function(){
-              $('#error-notification').hide();
-            },10000);
-          } else {
-            $('#error-notification').html('Error').show();
-            setTimeout(function(){
-              $('#error-notification').hide();
-            },10000);
-          }
-          console.log('failed to saved journal', model, res);
+        console.log('process transaction event', key, amount, currency, polarity, Self.card);
+
+        var journal = new Journal();
+        journal.set('key', key);
+        journal.set('polarity', polarity);
+        journal.set('currency', currency);
+        journal.set('amount', parseFloat(amount))
+        //journal.set(currency, parseFloat(amount));
+        journal.set('card', Self.card);
+        journal.set('merchant', Self.merchant);
+        journal.set('cardholderID', Self.card.get('cardholderID'));
+        if(typeof Self.employee != 'undefined'){
+          journal.set('employeeID', Self.employee.get('name'));
         }
-      });
+        journal.credentials = {};
+        journal.credentials.username = Self.merchant.get('merchantname');
+        journal.credentials.password = Self.merchant.get('password');
+        journal.save({},{
+          success: function(model, res){
+            console.log('successfully saved journal', model, res);
+            $('#success-notification').html('Successfully Processed Transaction.').show();
+            setTimeout(function(){
+              $('#success-notification').hide();
+            },10000);
+            Self.collection.fetch();
+            Self.journals.fetch();
+            //display receipt
+            router.navigate('#/merchants/' + Self.merchant.get('merchantname') + '/transactions/' + key + '/receipt/' + res.timestamp, true);
+          },
+          error: function(model, res){
+            if(typeof res.responseJSON != 'undefined' && typeof res.responseJSON.message != 'undefined' ){
+              console.info(res.responseJSON.message);
+              $('#error-notification').html(res.responseJSON.message).show();
+              setTimeout(function(){
+                $('#error-notification').hide();
+              },10000);
+            } else {
+              $('#error-notification').html('Error').show();
+              setTimeout(function(){
+                $('#error-notification').hide();
+              },10000);
+            }
+            console.log('failed to saved journal', model, res);
+          }
+        });
+      }
     },
 
     handleFiles: function(files){
@@ -510,12 +519,6 @@ module.exports = Backbone.View.extend({
           event.preventDefault();
           console.log('clicked on card input');
           $('#card').addClass('card-highlight');
-          // Self.activeInput = 'card';
-          // if(hasSoftKeyboard()){
-          //   $('#card').blur();
-          // } else {
-          //   $('#card').focus();
-          // }
         })
 
         Self.$('#card').off('change').on('change', function(event){

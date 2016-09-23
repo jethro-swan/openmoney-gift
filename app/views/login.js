@@ -103,7 +103,7 @@ module.exports = Backbone.View.extend({
 
     register: function( event ) {
         console.log('register event called');
-        Backbone.history.navigate('#register',{trigger:true, replace:false});
+        Backbone.history.navigate('#signup',{trigger:true, replace:false});
     },
 
     login: function( event, done ) {
