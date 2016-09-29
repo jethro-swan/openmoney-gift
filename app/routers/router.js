@@ -49,6 +49,7 @@ var EmployeeView = require('../views/employee');
 var SuppliesView = require('../views/supplies');
 var TemplatesView = require('../views/templates');
 var BalanceView = require('../views/balance');
+var SupportView = require('../views/support');
 
 //models
 var Merchant = require('../models/merchant');
@@ -158,7 +159,8 @@ module.exports = Marionette.AppRouter.extend({
     'merchants/:merchantname/administrative/currencies/:currencyName': 'currency',
     'merchants/:merchantname/administrative/employee/:name': 'employee',
     'merchants/:merchantname/supplies': 'templates',
-    'merchants/:merchantname/supplies/templates': 'templates'
+    'merchants/:merchantname/supplies/templates': 'templates',
+    'merchants/:merchantname/support': 'support',
 	},
 
   /*
@@ -551,6 +553,18 @@ module.exports = Marionette.AppRouter.extend({
       Self.dashhead.getRegion('breadcrumbs').reset();
       Self.dashhead.getRegion('breadcrumbs').show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
       Self.changePage(new TemplatesView({ merchant: Self.merchant, merchantname: merchantname}), {});
+    });
+  },
+  support: function(merchantname){
+    console.log('goto: support', merchantname);
+    Self.page.set('currentPage', 'support');
+    Self.page.set('title', 'Support');
+    Self.initializeData(function(err, res){
+      var breadcrumbs = [{ active: true, linkText: 'Support'}];
+      var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
+      Self.dashhead.getRegion('breadcrumbs').reset();
+      Self.dashhead.getRegion('breadcrumbs').show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
+      Self.changePage(new SupportView({ merchant: Self.merchant, merchantname: merchantname}), {});
     });
   },
   initializeData: function(done){

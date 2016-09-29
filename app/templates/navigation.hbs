@@ -12,38 +12,68 @@
       <ul class="nav nav-bordered nav-stacked">
         <li {{#if_eq page 'patrons'}}class="active"{{/if_eq}}>
           <a id="patrons" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/patrons" class="nav-padding">
-            <span class="icon icon-v-card icon-padding"></span>
-            Patrons
+            <div style="float: left;">
+              <span class="icon icon-v-card icon-padding" style="font-size: 2.5em"></span>
+            </div>
+            <div style="margin-top: 10px;">
+              <div style="font-size: 12px;">Create &amp; Manage</div>
+              Patrons
+            </div>
           </a>
         </li>
         <li {{#if_eq page 'transactions'}}class="active"{{/if_eq}}>
           <a id="transactions" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/transactions" class="nav-padding">
-            <span class="icon icon-dial-pad icon-padding"></span>
-            Transactions
+            <div style="float: left;">
+              <span class="icon icon-dial-pad icon-padding" style="font-size: 2.5em"></span>
+            </div>
+            <div style="margin-top: 0;">
+              <div style="font-size: 12px;">Process</div>
+              Transactions
+            </div>
           </a>
         </li>
         <li {{#if_eq page 'reports'}}class="active"{{/if_eq}}>
           <a id="reports" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/reports" class="nav-padding">
-            <span class="icon icon-area-graph icon-padding"></span>
-            Reports
+            <div style="float: left;">
+              <span class="icon icon-area-graph icon-padding" style="font-size: 2.5em;"></span>
+            </div>
+            <div style="margin-top: 10px;">
+              <div style="font-size: 12px;">Generate</div>
+              Reports
+            </div>
           </a>
         </li>
         <li {{#if_eq page 'administrative'}}class="active"{{/if_eq}}>
           <a id="administrative" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/administrative" class="nav-padding">
-            <span class="icon icon-tools icon-padding"></span>
-            Administrative
+            <div style="float: left;">
+              <span class="icon icon-tools icon-padding" style="font-size: 2.5em;"></span>
+            </div>
+            <div style="margin-top: 10px;">
+              <div style="font-size: 12px;">Manage</div>
+              Settings
+            </div>
           </a>
         </li>
         <li {{#if_eq page 'supplies'}}class="active"{{/if_eq}}>
           <a id="supplies" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/supplies" class="nav-padding">
-            <span class="icon icon-credit-card icon-padding"></span>
-            Supplies
+            <div style="float: left;">
+              <span class="icon icon-credit-card icon-padding" style="font-size: 2.5em;"></span>
+            </div>
+            <div style="margin-top: 10px;">
+              <div style="font-size: 12px;">Order</div>
+              Supplies
+            </div>
           </a>
         </li>
         <li {{#if_eq page 'support'}}class="active"{{/if_eq}}>
           <a id="support" href="#merchants/{{#merchant}}{{merchantname}}{{/merchant}}/support" class="nav-padding">
-            <span class="icon icon-old-phone icon-padding"></span>
-            Tech Support
+            <div style="float: left;">
+              <span class="icon icon-old-phone icon-padding" style="font-size: 2.5em;"></span>
+            </div>
+            <div style="margin-top: 10px;">
+              <div style="font-size: 12px;">Contact</div>
+              Support
+            </div>
           </a>
         </li>
       </ul>
