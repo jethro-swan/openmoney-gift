@@ -143,7 +143,7 @@ module.exports = Marionette.ItemView.extend({
               currencyModel.credentials.token = Self.merchant.get('access_token');
               //currencyModel.fetch();
               // var currencyModel = new Currency();
-              currencyModel.set('enabled', active == 'enable');
+              currencyModel.set('disabled', active == 'disabled');
               console.log('Currency', currencyModel);
               currencyModel.save({
                 success: function(model, response){

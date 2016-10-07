@@ -70,14 +70,14 @@
             <td>
               <div class="radio-inline custom-control custom-radio">
                 <label>
-                  <input type="radio" id="{{currency}}~enable" name="{{currency}}~active" class="active-radio" {{#enabled}}checked="checked"{{/enabled}}>
+                  <input type="radio" id="{{currency}}~enable" name="{{currency}}~active" class="active-radio" {{#unless disabled}}checked="checked"{{/unless}}>
                   <span class="custom-control-indicator"></span>
                   Enable
                 </label>
               </div>
               <div class="radio-inline custom-control custom-radio">
                 <label>
-                  <input type="radio" id="{{currency}}~disable" name="{{currency}}~active" class="active-radio" {{#unless enabled}}checked="checked"{{/unless}}>
+                  <input type="radio" id="{{currency}}~disable" name="{{currency}}~active" class="active-radio" {{#disabled}}checked="checked"{{/disabled}}>
                   <span class="custom-control-indicator"></span>
                   Disable
                 </label>

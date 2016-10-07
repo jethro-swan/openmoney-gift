@@ -2850,17 +2850,17 @@ this["openmoney"]["merchant"] = Handlebars.template({"1":function(container,dept
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + "~enable\" name=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
-    + "~active\" class=\"active-radio\" ";
-  stack1 = ((helper = (helper = helpers.enabled || (depth0 != null ? depth0.enabled : depth0)) != null ? helper : alias2),(options={"name":"enabled","hash":{},"fn":container.program(12, data, 0, blockParams, depths),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
-  if (!helpers.enabled) { stack1 = alias5.call(depth0,stack1,options)}
-  if (stack1 != null) { buffer += stack1; }
-  buffer += ">\n                  <span class=\"custom-control-indicator\"></span>\n                  Enable\n                </label>\n              </div>\n              <div class=\"radio-inline custom-control custom-radio\">\n                <label>\n                  <input type=\"radio\" id=\""
+    + "~active\" class=\"active-radio\" "
+    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.disabled : depth0),{"name":"unless","hash":{},"fn":container.program(12, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + ">\n                  <span class=\"custom-control-indicator\"></span>\n                  Enable\n                </label>\n              </div>\n              <div class=\"radio-inline custom-control custom-radio\">\n                <label>\n                  <input type=\"radio\" id=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + "~disable\" name=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
-    + "~active\" class=\"active-radio\" "
-    + ((stack1 = helpers.unless.call(alias1,(depth0 != null ? depth0.enabled : depth0),{"name":"unless","hash":{},"fn":container.program(12, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + ">\n                  <span class=\"custom-control-indicator\"></span>\n                  Disable\n                </label>\n              </div>\n            </td>\n            <td>\n              <div class=\"radio-inline custom-control custom-radio\">\n                <label>\n                  <input type=\"radio\" id=\""
+    + "~active\" class=\"active-radio\" ";
+  stack1 = ((helper = (helper = helpers.disabled || (depth0 != null ? depth0.disabled : depth0)) != null ? helper : alias2),(options={"name":"disabled","hash":{},"fn":container.program(12, data, 0, blockParams, depths),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
+  if (!helpers.disabled) { stack1 = alias5.call(depth0,stack1,options)}
+  if (stack1 != null) { buffer += stack1; }
+  buffer += ">\n                  <span class=\"custom-control-indicator\"></span>\n                  Disable\n                </label>\n              </div>\n            </td>\n            <td>\n              <div class=\"radio-inline custom-control custom-radio\">\n                <label>\n                  <input type=\"radio\" id=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + "~default\" name=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
@@ -3315,7 +3315,7 @@ this["openmoney"]["report"] = Handlebars.template({"1":function(container,depth0
 this["openmoney"]["reports"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.enabled : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.disabled : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"2":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
@@ -3517,7 +3517,7 @@ this["openmoney"]["templates"] = Handlebars.template({"1":function(container,dep
 this["openmoney"]["transactions"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.enabled : depth0),{"name":"if","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.disabled : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
 },"2":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
@@ -5653,7 +5653,7 @@ module.exports = Marionette.ItemView.extend({
               currencyModel.credentials.token = Self.merchant.get('access_token');
               //currencyModel.fetch();
               // var currencyModel = new Currency();
-              currencyModel.set('enabled', active == 'enable');
+              currencyModel.set('disabled', active == 'disabled');
               console.log('Currency', currencyModel);
               currencyModel.save({
                 success: function(model, response){
