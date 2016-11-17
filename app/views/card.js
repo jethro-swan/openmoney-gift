@@ -357,28 +357,23 @@ module.exports = Marionette.ItemView.extend({
           console.log("form valid:" + isValid);
           if( isValid ) {
 
-            if(typeof Self.model == 'undefined'){
-              Self.model = new Card();
+            var card = new Card();
+            if(typeof Self.model != 'undefined'){
+              card.set('_id', Self.model.get('_id'));
             }
-            Self.model.set('merchant', Self.merchant);
-            Self.model.set('key', Self.$('input[name=key]').val());
-
-            Self.model.set('cardholderID', Self.patrons_id);
-
-            //console.log('patron save', Self.model.toJSON());
-            Self.model.credentials = {};
-            Self.model.credentials.username = Self.merchant.get('merchantname');
-            Self.model.credentials.password = Self.merchant.get('password');
-            Self.model.save({},{
+            card.set('merchant', Self.merchant);
+            card.set('key', Self.$('input[name=key]').val());
+            card.set('cardholderID', Self.patrons_id);
+            card.set('disabled', Self.$('input[name=disabled]').prop('checked') === true);
+            card.credentials = {};
+            card.credentials.username = Self.merchant.get('merchantname');
+            card.credentials.password = Self.merchant.get('password');
+            card.save({},{
               success: function(model, response){
                 console.log('successfully saved model', model, response);
-                Self.model.set('_id', 'cards~' + Self.merchant.get('merchantname') + '~' + Self.model.get('key'));
-
-                Self.collection.set(Self.model, {remove: false});
+                Self.collection.fetch();
                 Self.journals.fetch();
                 router.navigate('merchants/' + Self.merchant.get('merchantname') + '/patrons/' + Self.patrons_id + '/cards/' + Self.model.get('key'));
-                Self.render();
-                //Backbone.history.navigate('#patrons/patrons~' + Self.merchant.get('merchantname') + '~' + Self.model.get('firstname') + '~' + Self.model.get('lastname'),{trigger:true, replace:true});
                 $('#success-notification').html('Successfully saved card.').show();
                 setTimeout(function(){
                   $('#success-notification').hide();

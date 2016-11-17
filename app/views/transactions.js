@@ -408,7 +408,6 @@ module.exports = Backbone.View.extend({
           table.page( data.page ).draw( 'page' );
         }
 
-
         this.$('.numberpad-button').off('click').on('click', function(event){
           event.preventDefault();
           var number = this.value;

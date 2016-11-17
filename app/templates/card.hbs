@@ -55,7 +55,7 @@
       <strong>Edit</strong>
     </button>
   </div>
-  <div id="stats" class="statcard statcard-success p-a-md m-b text-left">
+  <div id="stats" class="statcard statcard-{{#disabled}}danger{{else}}success{{/disabled}} p-a-md m-b text-left">
     <span class="statcard-number" style="float: left">
       <h1>Card#: {{key}}</h1>
       <div><h2 class="statcard-number text-left">BALANCE</h2></div>
@@ -74,7 +74,6 @@
   {{/if}}
   <form id='cardForm' {{#if _id}}style="display: none;"{{/if}}>
     {{#if _id}}<input type="hidden" name="_id" value="{{_id}}" />{{/if}}
-
     <div class="form-group text-left">
       <label for="key">Card Number</label>
       <div class="input-group">
@@ -110,6 +109,13 @@
           </div>
         </div>
       </div>
+    </div>
+    <div class="checkbox custom-control custom-checkbox">
+      <label>
+        <input type="checkbox" name="disabled" value="true" {{#disabled}}checked="checked"{{/disabled}} />
+        <span class="custom-control-indicator"></span>
+        Freeze Card
+      </label>
     </div>
     <div class="form-group text-right">
       <button type="button" name="generate" class="btn btn-lg btn-primary-outline">Generate Key</button>
