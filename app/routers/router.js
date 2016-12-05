@@ -46,7 +46,8 @@ var MerchantView = require('../views/merchant');
 var MerchantsView = require('../views/merchants');
 var CurrencyView = require('../views/currency');
 var EmployeeView = require('../views/employee');
-var SuppliesView = require('../views/supplies');
+var TemplatesListView = require('../views/templatesList');
+var TemplatesPrinterView = require('../views/templatesPrint');
 var TemplatesView = require('../views/templates');
 var BalanceView = require('../views/balance');
 var SupportView = require('../views/support');
@@ -69,6 +70,7 @@ var Breadcrumbs = require('../collections/breadcrumbs');
 var Stewards = require('../collections/stewards');
 var Currencies = require('../collections/currencies');
 var Employees = require('../collections/employees');
+var Templates = require('../collections/templates');
 
 //controllers
 //var PatronsController = require('../controllers/patrons');
@@ -151,6 +153,7 @@ module.exports = Marionette.AppRouter.extend({
     'merchants/:merchantname/patrons/:_id/cards/:key': 'card',
 		'merchants/:merchantname/transactions': 'transactions',
     'merchants/:merchantname/transactions/:key': 'transactions',
+    'm/:merchantname/t/:key': 'transactions',
     'merchants/:merchantname/transactions/:key/receipt/:timestamp': 'receipt',
 		'merchants/:merchantname/reports': 'reports',
     'merchants/:merchantname/reports/:currency': 'report',
@@ -158,8 +161,9 @@ module.exports = Marionette.AppRouter.extend({
     'merchants/:merchantname/administrative': 'administrative',
     'merchants/:merchantname/administrative/currencies/:currencyName': 'currency',
     'merchants/:merchantname/administrative/employee/:name': 'employee',
-    'merchants/:merchantname/supplies': 'templates',
-    'merchants/:merchantname/supplies/templates': 'templates',
+    'merchants/:merchantname/templates': 'templates',
+    'merchants/:merchantname/templates/:templateName': 'templatesEditor',
+    'merchants/:merchantname/templatesPrint/:templateName': 'templatesPrint',
     'merchants/:merchantname/support': 'support',
 	},
 
@@ -291,6 +295,7 @@ module.exports = Marionette.AppRouter.extend({
             delete Self.patronsCollection;
             delete Self.employeesCollection;
             delete Self.currenciesCollection;
+            delete Self.templatesCollection;
             delete Self.journals;
             delete Self.employeeModel;
 
@@ -461,7 +466,7 @@ module.exports = Marionette.AppRouter.extend({
         Self.dashhead.getRegion('breadcrumbs').reset();
         Self.dashhead.getRegion('breadcrumbs').show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
       }
-      Self.changePage(new PatronView( { model: patron, collection: Self.patronsCollection, cards: Self.cardsCollection, currencies: Self.currenciesCollection, journals: Self.journals, merchant: Self.merchant, id: id}), {changeHash:false, transition: "none"});
+      Self.changePage(new PatronView( { model: patron, collection: Self.patronsCollection, cards: Self.cardsCollection, currencies: Self.currenciesCollection, journals: Self.journals, templates: Self.templatesCollection, merchant: Self.merchant, id: id}), {changeHash:false, transition: "none"});
     });
   },
   card: function(merchantname, patrons_id, card_key){
@@ -486,7 +491,7 @@ module.exports = Marionette.AppRouter.extend({
       var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
       Self.dashhead.getRegion('breadcrumbs').reset();
       Self.dashhead.getRegion('breadcrumbs').show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
-      Self.changePage(new CardView( { collection: Self.cardsCollection, patrons: Self.patronsCollection, journals: Self.journals, currencies: Self.currenciesCollection, merchant: Self.merchant, card_key: card_key, patrons_id: patrons_id} ), {});
+      Self.changePage(new CardView( { collection: Self.cardsCollection, patrons: Self.patronsCollection, journals: Self.journals, currencies: Self.currenciesCollection, templates: Self.templatesCollection, merchant: Self.merchant, card_key: card_key, patrons_id: patrons_id} ), {});
     })
   },
   administrative: function(merchantname){
@@ -544,15 +549,40 @@ module.exports = Marionette.AppRouter.extend({
   },
   templates: function(merchantname){
     console.log('goto: templates', merchantname);
-    Self.page.set('currentPage', 'supplies');
+    Self.page.set('currentPage', 'templates');
     Self.page.set('title', 'Templates');
     Self.initializeData(function(err, res){
-      var breadcrumbs = [{ link: '#merchants/' + merchantname + '/administrative', linkText: 'Supplies'},
-                        {active: true, linkText: 'Generate Templates'}];
+      var breadcrumbs = [{active: true, linkText: 'Templates List'}];
       var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
       Self.dashhead.getRegion('breadcrumbs').reset();
       Self.dashhead.getRegion('breadcrumbs').show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
-      Self.changePage(new TemplatesView({ merchant: Self.merchant, merchantname: merchantname}), {});
+      Self.changePage(new TemplatesListView({ merchant: Self.merchant, merchantname: merchantname, templates: Self.templatesCollection}), {});
+    });
+  },
+  templatesEditor: function(merchantname, templateName){
+    console.log('goto templatesEditor', merchantname, templateName);
+    Self.page.set('currentPage', 'templates');
+    Self.page.set('title', 'Templates');
+    Self.initializeData(function(err, res){
+      var breadcrumbs = [{ link: '#merchants/' + merchantname + '/templates', linkText: 'Templates List'},
+                        {active: true, linkText: 'Money Designer'}];
+      var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
+      Self.dashhead.getRegion('breadcrumbs').reset();
+      Self.dashhead.getRegion('breadcrumbs').show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
+      Self.changePage(new TemplatesView({ merchant: Self.merchant, merchantname: merchantname, templates: Self.templatesCollection, templateName: templateName}), {});
+    });
+  },
+  templatesPrint: function(merchantname, templateName){
+    console.log('goto templatesEditor', merchantname, templateName);
+    Self.page.set('currentPage', 'templates');
+    Self.page.set('title', 'Templates');
+    Self.initializeData(function(err, res){
+      var breadcrumbs = [{ link: '#merchants/' + merchantname + '/templates', linkText: 'Templates List'},
+                        {active: true, linkText: 'Templates Printer'}];
+      var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
+      Self.dashhead.getRegion('breadcrumbs').reset();
+      Self.dashhead.getRegion('breadcrumbs').show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
+      Self.changePage(new TemplatesPrinterView({ merchant: Self.merchant, merchantname: merchantname, templates: Self.templatesCollection, templateName: templateName}), {});
     });
   },
   support: function(merchantname){
@@ -755,6 +785,30 @@ module.exports = Marionette.AppRouter.extend({
             }
           });
           callback(null, Self.employeesCollection);
+        }
+      }
+    };
+
+    parallel.templates = function(callback){
+      if(typeof Self.merchant == 'undefined' || Self.merchant.get('merchantname') == '' || typeof Self.merchant.get('access_token') == 'undefined'){
+        callback(null, null);
+      } else {
+        if(typeof Self.templatesCollection != 'undefined'){
+          callback(null, Self.templatesCollection);
+        } else {
+          Self.templatesCollection = new Templates([], {merchant: Self.merchant});
+          Self.templatesCollection.credentials = {};
+          Self.templatesCollection.credentials.username = Self.merchant.get('merchantname');
+          Self.templatesCollection.credentials.password = Self.merchant.get('password');
+          Self.templatesCollection.fetch({
+            success: function(collection, response){
+              console.log('successfully fetched templates collection', collection, response);
+            },
+            error: function(collection, response){
+              console.log('failed to fetched templates collection', collection, response);
+            }
+          });
+          callback(null, Self.templatesCollection);
         }
       }
     };

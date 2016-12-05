@@ -3,6 +3,17 @@
   background-color: #159c6e;
   cursor: pointer;
 }
+.vertical{
+    /*writing-mode:tb-rl;*/
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform: rotate(90deg);
+    white-space:nowrap;
+    height:{{./template/keySize}}pt;
+    width:{{./template/keySize}}pt;
+}
 @media print {
   button[name=showedit] {
     display: none;
@@ -55,22 +66,50 @@
       <strong>Edit</strong>
     </button>
   </div>
-  <div id="stats" class="statcard statcard-{{#disabled}}danger{{else}}success{{/disabled}} p-a-md m-b text-left">
-    <span class="statcard-number" style="float: left">
-      <h1>Card#: {{key}}</h1>
-      <div><h2 class="statcard-number text-left">BALANCE</h2></div>
-      {{#currencies}}
-        {{#if balance}}
-        <div><h3 class="statcard-number text-left">
-          {{currency_name}} {{decimal_places balance}}
-        </h3></div>
-        {{/if}}
-      {{/currencies}}
-    </span>
-    <span id="qrcode-image">
-      <canvas id="qr" style="margin-left: auto; margin-right: 0;"></canvas>
-    </span>
-  </div>
+  <table class="table">
+    <thead class="table-head">
+      <tr>
+        <th>Card</th>
+      </tr>
+    </thead>
+    <tbody class="table-rows">
+      <tr style="background-color: {{#disabled}}#E64759{{else}}#159c6e{{/disabled}}">
+        <td>
+
+            <div id="stats" class="statcard statcard-{{#disabled}}danger{{else}}success{{/disabled}} text-left" style="border: 2px solid #FFFFFF;width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;float: left;margin-right: {{./template/cardspacing}}px;margin-bottom: {{./template/cardspacing}}px;">
+              <canvas id="frontCanvas{{key}}" style="width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;display: none;"></canvas>
+            </div>
+
+            <div id="stats" class="statcard statcard-{{#disabled}}danger{{else}}success{{/disabled}} text-left" style="border: 2px solid #FFFFFF;width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;float: right;margin-left: {{./template/cardspacing}}px;margin-bottom: {{./template/cardspacing}}px;">
+              <div style="position: relative;">
+                <span id="keyText{{key}}" class="statcard-number keypos" style="color: {{./template/keyColor}};font-size: {{./template/keySize}}pt;position: absolute;top: {{./template/keyTop}}px;left: {{./template/keyLeft}}px;"><div class="{{#./template/vertical}}vertical{{/./template/vertical}}">{{key}}</div></span>
+                <canvas id="qr{{key}}" class="qrpos" style="position: absolute;top: {{./template/qrTop}}px;left: {{./template/qrLeft}}px;"></canvas>
+                <canvas id="backCanvas{{key}}" style="width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;display: none;"></canvas>
+              </div>
+            </div>
+
+            <div style="float:left;"><h2 class="statcard-number text-left">BALANCE</h2>
+            {{#currencies}}
+              {{#if balance}}
+              <div><h3 class="statcard-number text-left">
+                {{currency_name}} {{decimal_places balance}}
+              </h3></div>
+              {{/if}}
+            {{/currencies}}
+            </div>
+            <!-- <span class="statcard-number" style="float: left">
+              <h1>Card#: {{key}}</h1>
+
+            </span>
+            <span id="qrcode-image">
+              <canvas id="qr" style="margin-left: auto; margin-right: 0;"></canvas>
+            </span> -->
+
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   {{/if}}
   <form id='cardForm' {{#if _id}}style="display: none;"{{/if}}>
     {{#if _id}}<input type="hidden" name="_id" value="{{_id}}" />{{/if}}

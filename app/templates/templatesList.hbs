@@ -1,0 +1,38 @@
+<div class="col-sm-12" style="padding-top: 10px;">
+  <h2><strong>Templates</strong></h2>
+  <div id="newButtonDiv" class="text-right" style="padding-bottom:10px;">
+    <button type="button" name="newTemplate" class="btn btn-lg btn-success-outline" >
+      <strong>New Template</strong>
+    </button>
+  </div>
+  <div class="table-full">
+    <table class="table currencies" data-sort="table">
+      <thead>
+        <tr>
+          <th>Template Name</th>
+          <th>Default</th>
+          <th>Print</th>
+        </tr>
+      </thead>
+      <tbody class="table-rows">
+        {{#templates}}
+          <tr>
+            <td><a href="#merchants/{{../merchantname}}/templates/{{templateName}}">{{templateName}}</a></td>
+            <td><div class="radio-inline custom-control custom-radio">
+              <label>
+                <input type="radio" id="{{templateName}}~default" name="{{templateName}}~default" class="default-radio" {{#default}}checked="checked"{{/default}}>
+                <span class="custom-control-indicator"></span>
+                Default
+              </label>
+            </div></td>
+            <td>
+              <button type="button" id="{{templateName}}" name="printTemplate{{templateName}}" class="print btn btn-lg btn-primary-outline" >
+                <strong>Print Template</strong>
+              </button>
+            </td>
+          </tr>
+        {{/templates}}
+      </tbody>
+    </table>
+  </div>
+</div>

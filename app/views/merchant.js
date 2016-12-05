@@ -161,15 +161,11 @@ module.exports = Marionette.ItemView.extend({
         //Default Toggle
         Self.$('.default-radio').off('change').on('change', function(event){
           event.preventDefault();
-          console.log('default change: ', event);
-          console.log('event.currentTarget: ', event.currentTarget);
-          console.log('id', event.currentTarget.id);
+          console.log('default changed for', event.currentTarget.id);
           var currency = event.currentTarget.id.split('~')[0];
-          console.log('currency:', currency);
+
           if(typeof Self.merchant.get('access_token') != 'undefined'){
-            console.log('Self.merchant', Self.merchant);
             var defaultCurrency = Self.currencies.getDefault();
-            console.log('default currency', defaultCurrency);
             if(typeof defaultCurrency != 'undefined'){
               defaultCurrency.set('default', false);
               defaultCurrency.credentials = {};

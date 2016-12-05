@@ -569,8 +569,6 @@ module.exports = Backbone.View.extend({
             Self.processTransaction();
           }
 
-
-
           if(number != 'undefined'){
             console.log('number:' + number);
             console.log('active input ' + Self.activeInput);

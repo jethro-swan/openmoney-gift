@@ -164,12 +164,12 @@ module.exports = function(grunt) {
                             exports: '$.browser',
                             depends: [ 'jquery:$' ]
                         }
-                        // ,
-                        // "datatables": {
-                        //     path: './public/assets/datatables/datatables.js',
-                        //     exports: '$.DataTable',
-                        //     depends: [ 'jquery:$' ]
-                        // }
+                        ,
+                        "bootstrap-colorpicker": {
+                            path: './node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js',
+                            exports: '$.colorpicker',
+                            depends: [ 'jquery:$' ]
+                        }
                     }
                 }
             }

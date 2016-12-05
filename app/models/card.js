@@ -33,11 +33,6 @@ module.exports = Backbone.Model.extend({
 
       return Backbone.sync.apply(this, arguments);
     },
-    //
-    // url: function() {
-    //   console.log('patron model: ',this);
-    //   return '/V1/merchants/' + this.get('merchant').merchantname + '/patrons/' + this.get('_id');
-    // },
 
     idAttribute: '_id',
 

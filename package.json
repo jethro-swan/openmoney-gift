@@ -27,7 +27,8 @@
     "backbone.basicauth": "./node_modules/backbone.basicauth/backbone.basicauth.js",
     "html5-qrcode": "./public/assets/js/html5-qrcode.js",
     "jsqrcode": "./public/assets/js/jsqrcode.js",
-    "fruitdown": "./public/assets/js/pouchdb.fruitdown.js"
+    "fruitdown": "./public/assets/js/pouchdb.fruitdown.js",
+    "bootstrap-colorpicker": "./node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.min.js"
   },
   "browserify-shim": {
     "jquery": "global:jQuery",
@@ -98,6 +99,13 @@
       "depends": [
         "pouchdb: PouchDB"
       ]
+    },
+    "bootstrap-colorpicker": {
+      "exports": "$.colorpicker",
+      "depends": [
+        "jquery:jQuery",
+        "jquery:$"
+      ]
     }
   },
   "main": "intex.html",
@@ -120,6 +128,7 @@
     "backbone.basicauth": "^0.4.2",
     "backbone.marionette": "^2.4.7",
     "bootstrap": "^3.3.6",
+    "bootstrap-colorpicker": "^2.3.6",
     "browsernizr": "^2.1.0",
     "buffer": "^4.7.0",
     "jquery": "^2.2.4",

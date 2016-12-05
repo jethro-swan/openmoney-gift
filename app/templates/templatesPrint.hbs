@@ -1,0 +1,137 @@
+<style>
+#stats {
+  border:1px solid #FFFFFF;
+}
+@media print {
+  button[name=showedit] {
+    display: none;
+  }
+  button[name=newCard] {
+    display: none;
+  }
+  button[name=print] {
+    display: none;
+  }
+  .email-link{
+    display: none;
+  }
+  .table-head{
+    display: none;
+  }
+  #dashhead {
+    display: none;
+  }
+  .navigation {
+    display: none;
+  }
+  .breadcrumbs {
+    display: none;
+  }
+  .receipt {
+    border-bottom: 1px dashed black;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .content {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .container {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  #stats {
+    border: 2px solid black;
+    border-radius: 0;
+    /*margin:5px;*/
+  }
+  .statcard-number {
+    font-size: 10pt;
+    padding:5pt;
+  }
+  .header {
+    display: none;
+  }
+  .form-group {
+    display: none;
+  }
+  .checkbox {
+    display: none;
+  }
+  .maindiv {
+    padding: 0;
+    display: none;
+  }
+  .printTemplate {
+    display: none;
+  }
+  @page { margin: 0; }
+  #body {
+    padding: 0;
+  }
+  .container {
+    padding: 0;
+  }
+  .content {
+    padding: 0;
+  }
+  .cards {
+    padding: 0;
+    margin: 0;
+    page-break-after: avoid;
+  }
+  html, body { height: 99%; }
+}
+
+</style>
+
+<div class="col-sm-12 header">
+  <h1>Money Printer</h1>
+</div>
+<div class="col-sm-6 maindiv" style="padding-top: 10px;">
+
+  <div class="col-sm-6 form-group text-left">
+    <label for="numberOfCards">Number of Cards</label>
+    <input type="number" id="numberOfCards" name="numberOfCards" value="{{numberOfCards}}" placeholder="Cards" class="form-control" />
+  </div>
+
+  <div class="col-sm-6 form-group text-left">
+    <label for="cardspacing">Space Between Cards</label>
+    <input type="number" id="cardspacing" name="cardspacing" value="{{cardSpacing}}" placeholder="px" class="form-control" />
+  </div>
+
+  <div class="col-sm-6 form-group text-left">
+    <label for="page1top">front top margin</label>
+    <input type="number" id="page1top" name="page1top" value="{{frontTopMargin}}" placeholder="px" class="form-control" />
+  </div>
+
+  <div class="col-sm-6 form-group text-left">
+    <label for="page1left">front left margin</label>
+    <input type="number" id="page1left" name="page1left" value="{{frontLeftMargin}}" placeholder="px" class="form-control" />
+  </div>
+
+  <div class="col-sm-6 form-group text-left">
+    <label for="page2top">back top margin</label>
+    <input type="number" id="page2top" name="page2top" value="{{backTopMargin}}" placeholder="px" class="form-control" />
+  </div>
+
+  <div class="col-sm-6 form-group text-left">
+    <label for="page2right">back right margin</label>
+    <input type="number" id="page2right" name="page2right" value="{{backRightMargin}}" placeholder="px" class="form-control" />
+  </div>
+
+  <!-- <div class="col-sm-6">
+    <div class="checkbox custom-control custom-checkbox">
+      <label>
+        <input type="checkbox" id="borders" name="borders" value="true" {{#borders}}checked="checked"{{/borders}} />
+        <span class="custom-control-indicator"></span>
+        Display Borders
+      </label>
+    </div>
+  </div> -->
+
+  <div class="text-right printTemplate" style="padding-bottom: 20px;">
+    <button type="button" name="print" class="btn btn-lg btn-primary-outline">Print Template</button>
+  </div>
+</div>
+<div id="cards" class="col-sm-12 cards"></div>

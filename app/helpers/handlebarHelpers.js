@@ -47,6 +47,9 @@ module.exports = function(Handlebars) {
             }
             res += string.substr(string.length - numberOfCharToShow, string.length);
             return res;
+        },
+        multiply: function(a, b){
+          return a * b;
         }
     }
 };

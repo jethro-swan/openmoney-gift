@@ -1,0 +1,30 @@
+<style>
+#stats {
+  border:1px solid #FFFFFF;
+}
+.vertical{
+    /*writing-mode:tb-rl;*/
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -o-transform: rotate(90deg);
+    -ms-transform:rotate(90deg);
+    transform: rotate(90deg);
+    white-space:nowrap;
+    height:{{keySize}}pt;
+    width:{{keySize}}pt;
+}
+</style>
+<div class="page1" style="overflow: hidden;">
+  {{#cards}}
+  <div id="stats" class="statcard text-left" style="width:{{../cardWidth}}px; height: {{../cardHeight}}px;float: left;margin-right: {{../cardspacing}}px;margin-bottom: {{../cardspacing}}px;">
+    <canvas id="frontCanvas{{key}}" style="width:{{../cardWidth}}px; height: {{../cardHeight}}px;display: none;"></canvas>
+  </div>
+  <div id="stats" class="statcard text-left" style="width:{{../cardWidth}}px; height: {{../cardHeight}}px;float: right;margin-left: {{../cardspacing}}px;margin-bottom: {{../cardspacing}}px;">
+    <div style="position: relative;">
+      <span id="keyText{{key}}" class="statcard-number keypos" style="color: {{../keyColor}};font-size: {{../keySize}}pt;position: absolute;top: {{../keyTop}}px;left: {{../keyLeft}}px;"><div class="{{#../vertical}}vertical{{/../vertical}}">{{key}}</div></span>
+      <canvas id="qr{{key}}" class="qrpos" style="position: absolute;top: {{../qrTop}}px;left: {{../qrLeft}}px;"></canvas>
+      <canvas id="backCanvas{{key}}" style="width:{{../cardWidth}}px; height: {{../cardHeight}}px;display: none;"></canvas>
+    </div>
+  </div>
+  {{/cards}}
+</div>
