@@ -620,7 +620,6 @@ module.exports = Backbone.Collection.extend({
   },
   parse: function(response){
     console.log('templates collection parse method', response);
-    console.log('steward', Self.steward);
     var resultsArray = [];
     resultsArray = response;
     console.log('templates collection parse results: ', resultsArray);
@@ -2043,6 +2042,7 @@ module.exports = Marionette.AppRouter.extend({
 	},
 	transactions: function(merchantname, key) {
 		console.log('Goto: TransactionsView', merchantname, key);
+    Self.merchantname = merchantname;
     Self.initializeData(function(err, res){
       if(typeof Self.merchant != 'undefined' && Self.merchant.get('merchantname') == merchantname){
         Self.page.set('currentPage', 'transactions');
@@ -2069,7 +2069,7 @@ module.exports = Marionette.AppRouter.extend({
           breadcrumbRegion.show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
         }
         Self.navigationOff();
-        Self.changePage(new BalanceView({ merchantname: merchantname, key: key }),{pageName: 'balance'});
+        Self.changePage(new BalanceView({ merchantname: merchantname, templates: Self.templatesCollection, key: key }),{pageName: 'balance'});
       } else {
         //merchant isn't logged in and card is not defined.
         Self.welcome();
@@ -2475,16 +2475,19 @@ module.exports = Marionette.AppRouter.extend({
     };
 
     parallel.templates = function(callback){
-      if(typeof Self.merchant == 'undefined' || Self.merchant.get('merchantname') == '' || typeof Self.merchant.get('access_token') == 'undefined'){
+
+      if((typeof Self.merchant == 'undefined' || Self.merchant.get('merchantname') == '' ) && (typeof Self.merchantname == 'undefined' || Self.merchantname == '')){
         callback(null, null);
       } else {
         if(typeof Self.templatesCollection != 'undefined'){
           callback(null, Self.templatesCollection);
         } else {
-          Self.templatesCollection = new Templates([], {merchant: Self.merchant});
-          Self.templatesCollection.credentials = {};
-          Self.templatesCollection.credentials.username = Self.merchant.get('merchantname');
-          Self.templatesCollection.credentials.password = Self.merchant.get('password');
+          if(typeof Self.merchant != 'undefined' && Self.merchant.get('merchantname') != ''){
+            Self.templatesCollection = new Templates([], {merchant: Self.merchant});
+          } else {
+            Self.templatesCollection = new Templates([], {merchant: new Merchant({merchantname: Self.merchantname})});
+          }
+
           Self.templatesCollection.fetch({
             success: function(collection, response){
               console.log('successfully fetched templates collection', collection, response);
@@ -2574,11 +2577,29 @@ module.exports = function(Handlebars) {
 
 this["openmoney"] = this["openmoney"] || {};
 
-this["openmoney"]["balance"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data,blockParams,depths) {
+this["openmoney"]["balance"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
+    return "danger";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "success";
+},"5":function(container,depth0,helpers,partials,data) {
+    return "vertical";
+},"7":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(2, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"2":function(container,depth0,helpers,partials,data,blockParams,depths) {
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.balance : depth0),{"name":"if","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"8":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
+
+  return "    <div><h3 class=\"statcard-number text-left\">\n      "
+    + alias3(((helper = (helper = helpers.currency_name || (depth0 != null ? depth0.currency_name : depth0)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"currency_name","hash":{},"data":data}) : helper)))
+    + " "
+    + alias3((helpers.decimal_places || (depth0 && depth0.decimal_places) || alias2).call(alias1,(depth0 != null ? depth0.balance : depth0),{"name":"decimal_places","hash":{},"data":data}))
+    + "\n    </h3></div>\n";
+},"10":function(container,depth0,helpers,partials,data,blockParams,depths) {
+    var stack1;
+
+  return ((stack1 = helpers["if"].call(depth0 != null ? depth0 : {},depth0,{"name":"if","hash":{},"fn":container.program(11, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"11":function(container,depth0,helpers,partials,data,blockParams,depths) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3=container.escapeExpression;
 
   return "        <div><h3 class=\"statcard-number text-left\">\n        "
@@ -2586,21 +2607,21 @@ this["openmoney"]["balance"] = Handlebars.template({"1":function(container,depth
     + " "
     + alias3(((helper = (helper = helpers.key || (data && data.key)) != null ? helper : alias2),(typeof helper === "function" ? helper.call(alias1,{"name":"key","hash":{},"data":data}) : helper)))
     + "\n        </h3></div>\n";
-},"4":function(container,depth0,helpers,partials,data) {
+},"13":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers.blockHelperMissing.call(depth0,container.lambda(depth0, depth0),{"name":"this","hash":{},"fn":container.program(5, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
-},"5":function(container,depth0,helpers,partials,data) {
+  return ((stack1 = helpers.blockHelperMissing.call(depth0,container.lambda(depth0, depth0),{"name":"this","hash":{},"fn":container.program(14, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+},"14":function(container,depth0,helpers,partials,data) {
     var stack1, helper, options, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression, alias5=helpers.blockHelperMissing, buffer = 
   "            <tr id=\""
     + alias4(((helper = (helper = helpers._id || (depth0 != null ? depth0._id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"_id","hash":{},"data":data}) : helper)))
     + "\">\n              <td>"
     + alias4((helpers.prettify_date || (depth0 && depth0.prettify_date) || alias2).call(alias1,(depth0 != null ? depth0.timestamp : depth0),{"name":"prettify_date","hash":{},"data":data}))
     + "</td>\n              <td>";
-  stack1 = ((helper = (helper = helpers.load || (depth0 != null ? depth0.load : depth0)) != null ? helper : alias2),(options={"name":"load","hash":{},"fn":container.program(6, data, 0),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
+  stack1 = ((helper = (helper = helpers.load || (depth0 != null ? depth0.load : depth0)) != null ? helper : alias2),(options={"name":"load","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
   if (!helpers.load) { stack1 = alias5.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  stack1 = ((helper = (helper = helpers.redeem || (depth0 != null ? depth0.redeem : depth0)) != null ? helper : alias2),(options={"name":"redeem","hash":{},"fn":container.program(8, data, 0),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
+  stack1 = ((helper = (helper = helpers.redeem || (depth0 != null ? depth0.redeem : depth0)) != null ? helper : alias2),(options={"name":"redeem","hash":{},"fn":container.program(17, data, 0),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
   if (!helpers.redeem) { stack1 = alias5.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
   return buffer + "</td>\n              <td>"
@@ -2608,20 +2629,83 @@ this["openmoney"]["balance"] = Handlebars.template({"1":function(container,depth
     + "</td>\n              <td>"
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + "</td>\n            </tr>\n";
-},"6":function(container,depth0,helpers,partials,data) {
+},"15":function(container,depth0,helpers,partials,data) {
     return "Load";
-},"8":function(container,depth0,helpers,partials,data) {
+},"17":function(container,depth0,helpers,partials,data) {
     return "Redeem";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data,blockParams,depths) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : {};
-
-  return "<style>\n[data-sort=table] > tbody > tr:hover{\n  background-color: #159c6e;\n  cursor: pointer;\n}\n@media print {\n  button[name=showedit] {\n    display: none;\n  }\n  button[name=newTransaction] {\n    display: none;\n  }\n  button[name=print] {\n    display: none;\n  }\n  .card-history{\n    display: none;\n  }\n  .email-link{\n    display: none;\n  }\n  .table-head{\n    display: none;\n  }\n  #dashhead {\n    display: none;\n  }\n  .navigation {\n    display: none;\n  }\n  .breadcrumbs {\n    display: none;\n  }\n  .receipt {\n    border-bottom: 1px dashed black;\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .content {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .container {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  @page { margin: 0; }\n}\n</style>\n<div class=\"col-sm-12\" style=\"padding-top: 10px;\">\n\n  <div id=\"statsButton\" class=\"text-right\" style=\"padding-bottom:10px;\">\n    <button type=\"button\" name=\"print\" class=\"btn btn-lg btn-primary-outline\">Print Card</button>\n    <button type=\"button\" name=\"showedit\" class=\"btn btn-lg btn-primary-outline\" >\n      <strong>Edit</strong>\n    </button>\n  </div>\n  <div id=\"stats\" class=\"statcard statcard-success p-a-md m-b text-left\">\n    <span class=\"statcard-number\" style=\"float: left\">\n      <h1>Card#: "
-    + container.escapeExpression(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : helpers.helperMissing),(typeof helper === "function" ? helper.call(alias1,{"name":"key","hash":{},"data":data}) : helper)))
+    var stack1, helper, options, alias1=container.lambda, alias2=container.escapeExpression, alias3=depth0 != null ? depth0 : {}, alias4=helpers.helperMissing, alias5="function", alias6=helpers.blockHelperMissing, buffer = 
+  "<style>\n[data-sort=table] > tbody > tr:hover{\n  background-color: #159c6e;\n  cursor: pointer;\n}\n.vertical{\n    /*writing-mode:tb-rl;*/\n    -webkit-transform:rotate(90deg);\n    -moz-transform:rotate(90deg);\n    -o-transform: rotate(90deg);\n    -ms-transform:rotate(90deg);\n    transform: rotate(90deg);\n    white-space:nowrap;\n    height:"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.keySize : stack1), depth0))
+    + "pt;\n    width:"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.keySize : stack1), depth0))
+    + "pt;\n}\n#stats {\n  border:1px solid #FFFFFF;\n}\n@media print {\n  button[name=showedit] {\n    display: none;\n  }\n  button[name=newTransaction] {\n    display: none;\n  }\n  button[name=print] {\n    display: none;\n  }\n  .card-history{\n    display: none;\n  }\n  .email-link{\n    display: none;\n  }\n  .table-head{\n    display: none;\n  }\n  #dashhead {\n    display: none;\n  }\n  .navigation {\n    display: none;\n  }\n  .breadcrumbs {\n    display: none;\n  }\n  .receipt {\n    border-bottom: 1px dashed black;\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .content {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .container {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .cards {\n    padding: 0;\n    margin: 0;\n    page-break-after: avoid;\n  }\n  #stats {\n    border: 2px solid black;\n    border-radius: 0;\n    /*margin:5px;*/\n  }\n  @page { margin: 0; }\n  html, body { height: 99%; }\n  .table>thead>tr>th {\n    border-bottom: none;\n  }\n  .table>tbody>tr>td {\n    border-top: none;\n  }\n}\n</style>\n<div class=\"col-sm-12\" style=\"padding-top: 10px;\">\n\n  <div id=\"statsButton\" class=\"text-right\" style=\"padding-bottom:10px;\">\n    <button type=\"button\" name=\"print\" class=\"btn btn-lg btn-primary-outline\">Print Card</button>\n  </div>\n  <div id=\"stats\" class=\"statcard statcard-";
+  stack1 = ((helper = (helper = helpers.disabled || (depth0 != null ? depth0.disabled : depth0)) != null ? helper : alias4),(options={"name":"disabled","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data}),(typeof helper === alias5 ? helper.call(alias3,options) : helper));
+  if (!helpers.disabled) { stack1 = alias6.call(depth0,stack1,options)}
+  if (stack1 != null) { buffer += stack1; }
+  buffer += " text-left\" style=\"width:"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardWidth : stack1), depth0))
+    + "px; height: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardHeight : stack1), depth0))
+    + "px;float: left;margin-right: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardspacing : stack1), depth0))
+    + "px;margin-bottom: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardspacing : stack1), depth0))
+    + "px;\">\n    <canvas id=\"frontCanvas"
+    + alias2(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"key","hash":{},"data":data}) : helper)))
+    + "\" style=\"width:"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardWidth : stack1), depth0))
+    + "px; height: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardHeight : stack1), depth0))
+    + "px;display: none;\"></canvas>\n  </div>\n\n  <div id=\"stats\" class=\"statcard statcard-";
+  stack1 = ((helper = (helper = helpers.disabled || (depth0 != null ? depth0.disabled : depth0)) != null ? helper : alias4),(options={"name":"disabled","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.program(3, data, 0, blockParams, depths),"data":data}),(typeof helper === alias5 ? helper.call(alias3,options) : helper));
+  if (!helpers.disabled) { stack1 = alias6.call(depth0,stack1,options)}
+  if (stack1 != null) { buffer += stack1; }
+  buffer += " text-left\" style=\"width:"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardWidth : stack1), depth0))
+    + "px; height: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardHeight : stack1), depth0))
+    + "px;float: right;margin-left: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardspacing : stack1), depth0))
+    + "px;margin-bottom: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardspacing : stack1), depth0))
+    + "px;\">\n    <div style=\"position: relative;\">\n      <span id=\"keyText"
+    + alias2(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"key","hash":{},"data":data}) : helper)))
+    + "\" class=\"statcard-number keypos\" style=\"color: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.keyColor : stack1), depth0))
+    + ";font-size: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.keySize : stack1), depth0))
+    + "pt;position: absolute;top: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.keyTop : stack1), depth0))
+    + "px;left: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.keyLeft : stack1), depth0))
+    + "px;\"><div class=\""
+    + ((stack1 = alias6.call(depth0,alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.vertical : stack1), depth0),{"name":"./template/vertical","hash":{},"fn":container.program(5, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "\">"
+    + alias2(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"key","hash":{},"data":data}) : helper)))
+    + "</div></span>\n      <canvas id=\"qr"
+    + alias2(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"key","hash":{},"data":data}) : helper)))
+    + "\" class=\"qrpos\" style=\"position: absolute;top: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.qrTop : stack1), depth0))
+    + "px;left: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.qrLeft : stack1), depth0))
+    + "px;\"></canvas>\n      <canvas id=\"backCanvas"
+    + alias2(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"key","hash":{},"data":data}) : helper)))
+    + "\" style=\"width:"
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardWidth : stack1), depth0))
+    + "px; height: "
+    + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardHeight : stack1), depth0))
+    + "px;display: none;\"></canvas>\n    </div>\n  </div>\n\n  <div class=\"balance\" style=\"float:left;\"><h2 class=\"statcard-number text-left\">BALANCE</h2>\n";
+  stack1 = ((helper = (helper = helpers.currencies || (depth0 != null ? depth0.currencies : depth0)) != null ? helper : alias4),(options={"name":"currencies","hash":{},"fn":container.program(7, data, 0, blockParams, depths),"inverse":container.noop,"data":data}),(typeof helper === alias5 ? helper.call(alias3,options) : helper));
+  if (!helpers.currencies) { stack1 = alias6.call(depth0,stack1,options)}
+  if (stack1 != null) { buffer += stack1; }
+  return buffer + "  </div>\n  <!-- <div id=\"stats\" class=\"statcard statcard-success p-a-md m-b text-left\">\n    <span class=\"statcard-number\" style=\"float: left\">\n      <h1>Card#: "
+    + alias2(((helper = (helper = helpers.key || (depth0 != null ? depth0.key : depth0)) != null ? helper : alias4),(typeof helper === alias5 ? helper.call(alias3,{"name":"key","hash":{},"data":data}) : helper)))
     + "</h1>\n      <div><h2 class=\"statcard-number text-left\">BALANCE</h2></div>\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.balances : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "    </span>\n    <span id=\"qrcode-image\">\n      <canvas id=\"qr\" style=\"margin-left: auto; margin-right: 0;\"></canvas>\n    </span>\n  </div>\n  <div class=\"card-history\">\n    <h2><strong>Card History</strong></h2>\n    <div id=\"newButtonDiv\" class=\"text-right\" style=\"padding-bottom:10px;\">\n      <button type=\"button\" name=\"newTransaction\" class=\"btn btn-lg btn-success-outline\" >\n        <strong>Process Transaction</strong>\n      </button>\n    </div>\n    <div class=\"table-full\">\n      <table class=\"table\" data-sort=\"basic\">\n        <thead>\n          <tr>\n            <th>Date</th>\n            <th>Load or Redeem</th>\n            <th>Amount</th>\n            <th>Currency</th>\n          </tr>\n        </thead>\n        <tbody class=\"table-rows\">\n"
-    + ((stack1 = helpers.each.call(alias1,(depth0 != null ? depth0.journals : depth0),{"name":"each","hash":{},"fn":container.program(4, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "        </tbody>\n      </table>\n    </div>\n  </div>\n</div>\n";
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.balances : depth0),{"name":"each","hash":{},"fn":container.program(10, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "    </span>\n    <span id=\"qrcode-image\">\n      <canvas id=\"qr\" style=\"margin-left: auto; margin-right: 0;\"></canvas>\n    </span>\n  </div> -->\n  <!-- <br/>\n  <div class=\"card-history\">\n    <h2><strong>Card History</strong></h2>\n    <div class=\"table-full\">\n      <table class=\"table\" data-sort=\"basic\">\n        <thead>\n          <tr>\n            <th>Date</th>\n            <th>Load or Redeem</th>\n            <th>Amount</th>\n            <th>Currency</th>\n          </tr>\n        </thead>\n        <tbody class=\"table-rows\">\n"
+    + ((stack1 = helpers.each.call(alias3,(depth0 != null ? depth0.journals : depth0),{"name":"each","hash":{},"fn":container.program(13, data, 0, blockParams, depths),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "        </tbody>\n      </table>\n    </div>\n  </div> -->\n</div>\n";
 },"useData":true,"useDepths":true});
 
 this["openmoney"]["breadcrumb"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
@@ -2653,7 +2737,7 @@ this["openmoney"]["card"] = Handlebars.template({"1":function(container,depth0,h
   stack1 = ((helper = (helper = helpers.disabled || (depth0 != null ? depth0.disabled : depth0)) != null ? helper : alias2),(options={"name":"disabled","hash":{},"fn":container.program(6, data, 0),"inverse":container.program(8, data, 0),"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
   if (!helpers.disabled) { stack1 = alias4.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  buffer += " text-left\" style=\"border: 2px solid #FFFFFF;width:"
+  buffer += " text-left\" style=\"width:"
     + alias6(alias5(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardWidth : stack1), depth0))
     + "px; height: "
     + alias6(alias5(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardHeight : stack1), depth0))
@@ -2671,7 +2755,7 @@ this["openmoney"]["card"] = Handlebars.template({"1":function(container,depth0,h
   stack1 = ((helper = (helper = helpers.disabled || (depth0 != null ? depth0.disabled : depth0)) != null ? helper : alias2),(options={"name":"disabled","hash":{},"fn":container.program(6, data, 0),"inverse":container.program(8, data, 0),"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
   if (!helpers.disabled) { stack1 = alias4.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  buffer += " text-left\" style=\"border: 2px solid #FFFFFF;width:"
+  buffer += " text-left\" style=\"width:"
     + alias6(alias5(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardWidth : stack1), depth0))
     + "px; height: "
     + alias6(alias5(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardHeight : stack1), depth0))
@@ -2705,7 +2789,7 @@ this["openmoney"]["card"] = Handlebars.template({"1":function(container,depth0,h
     + alias6(alias5(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardWidth : stack1), depth0))
     + "px; height: "
     + alias6(alias5(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.cardHeight : stack1), depth0))
-    + "px;display: none;\"></canvas>\n              </div>\n            </div>\n\n            <div style=\"float:left;\"><h2 class=\"statcard-number text-left\">BALANCE</h2>\n";
+    + "px;display: none;\"></canvas>\n              </div>\n            </div>\n\n            <div class=\"balance\" style=\"float:left;\"><h2 class=\"statcard-number text-left\">BALANCE</h2>\n";
   stack1 = ((helper = (helper = helpers.currencies || (depth0 != null ? depth0.currencies : depth0)) != null ? helper : alias2),(options={"name":"currencies","hash":{},"fn":container.program(12, data, 0),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
   if (!helpers.currencies) { stack1 = alias4.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
@@ -2786,7 +2870,7 @@ this["openmoney"]["card"] = Handlebars.template({"1":function(container,depth0,h
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.keySize : stack1), depth0))
     + "pt;\n    width:"
     + alias2(alias1(((stack1 = (depth0 != null ? depth0.template : depth0)) != null ? stack1.keySize : stack1), depth0))
-    + "pt;\n}\n@media print {\n  button[name=showedit] {\n    display: none;\n  }\n  button[name=newTransaction] {\n    display: none;\n  }\n  button[name=print] {\n    display: none;\n  }\n  .card-history{\n    display: none;\n  }\n  .email-link{\n    display: none;\n  }\n  .table-head{\n    display: none;\n  }\n  #dashhead {\n    display: none;\n  }\n  .navigation {\n    display: none;\n  }\n  .breadcrumbs {\n    display: none;\n  }\n  .receipt {\n    border-bottom: 1px dashed black;\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .content {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .container {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  @page { margin: 0; }\n}\n</style>\n<div class=\"col-sm-12\" style=\"padding-top: 10px;\">\n"
+    + "pt;\n}\n#stats {\n  border:1px solid #FFFFFF;\n}\n@media print {\n  button[name=showedit] {\n    display: none;\n  }\n  button[name=newTransaction] {\n    display: none;\n  }\n  button[name=print] {\n    display: none;\n  }\n  .card-history{\n    display: none;\n  }\n  .email-link{\n    display: none;\n  }\n  .table-head{\n    display: none;\n  }\n  #dashhead {\n    display: none;\n  }\n  .navigation {\n    display: none;\n  }\n  .breadcrumbs {\n    display: none;\n  }\n  .receipt {\n    border-bottom: 1px dashed black;\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .content {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .container {\n    padding-left: 0;\n    padding-right: 0;\n  }\n  .cards {\n    padding: 0;\n    margin: 0;\n    page-break-after: avoid;\n  }\n  #stats {\n    border: 2px solid black;\n    border-radius: 0;\n    /*margin:5px;*/\n  }\n  @page { margin: 0; }\n  html, body { height: 99%; }\n  .table>thead>tr>th {\n    border-bottom: none;\n  }\n  .table>tbody>tr>td {\n    border-top: none;\n  }\n}\n</style>\n<div class=\"col-sm-12\" style=\"padding-top: 10px;\">\n"
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0._id : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + "  <form id='cardForm' "
     + ((stack1 = helpers["if"].call(alias3,(depth0 != null ? depth0._id : depth0),{"name":"if","hash":{},"fn":container.program(15, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
@@ -2948,7 +3032,7 @@ this["openmoney"]["dashhead"] = Handlebars.template({"1":function(container,dept
   stack1 = ((helper = (helper = helpers.employee || (depth0 != null ? depth0.employee : depth0)) != null ? helper : alias2),(options={"name":"employee","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
   if (!helpers.employee) { stack1 = helpers.blockHelperMissing.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  return buffer + " </button>\n    <span class=\"dashhead-toolbar-divider hidden-xs\"></span>\n    <div id=\"pincodeModal\" class=\"modal\" style=\"display: none;\">\n      <div class=\"modal-dialog modal-sm\">\n        <div class=\"modal-content\">\n          <div class=\"modal-header\">\n            <button type=\"button\" name=\"close\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n            <h4 class=\"modal-title\">Employee Pin Code:</h4>\n          </div>\n          <div class=\"modal-body\">\n            <div id=\"error-modal-notification\" class=\"notifications center-block alert alert-danger text-center\" role=\"alert\" style=\"display: none;\"></div>\n            <input type=\"password\" name=\"code\" value=\"\" placeholder=\"Employee Pin Code\" class=\"form-control\"/>\n          </div>\n          <div class=\"modal-actions\">\n            <button type=\"button\" name=\"cancel\" class=\"btn-link modal-action\" data-dismiss=\"modal\">Cancel</button>\n            <button type=\"button\" name=\"setEmployee\" class=\"btn-link modal-action\" data-dismiss=\"modal\">\n              <strong>Set Employee</strong>\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <div class=\"dashhead-toolbar\">\n    <button type=\"button\" id=\"help-button\" class=\"btn btn-xs btn-pill btn-info\" style=\"margin-top: 7px;\"><span class=\"icon icon-help-with-circle\"></span> Help</button>\n  </div>\n</div>\n<div id='breadcrumbs' class=\"breadcrumbs\"></div>\n<div id=\"success-notification\" class=\"notifications center-block alert alert-success text-center\" role=\"alert\" style=\"display: none;\"></div>\n<div id=\"error-notification\" class=\"notifications center-block alert alert-danger text-center\" role=\"alert\" style=\"display: none;\"></div>\n";
+  return buffer + " </button>\n    <span class=\"dashhead-toolbar-divider hidden-xs\"></span>\n    <div id=\"pincodeModal\" class=\"modal\" style=\"display: none;\">\n      <div class=\"modal-dialog modal-sm\">\n        <div class=\"modal-content\">\n          <div class=\"modal-header\">\n            <button type=\"button\" name=\"close\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n            <h4 class=\"modal-title\">Employee Pin Code:</h4>\n          </div>\n          <div class=\"modal-body\">\n            <div id=\"error-modal-notification\" class=\"notifications center-block alert alert-danger text-center\" role=\"alert\" style=\"display: none;\"></div>\n            <input type=\"password\" name=\"code\" value=\"\" placeholder=\"Employee Pin Code\" class=\"form-control\"/>\n          </div>\n          <div class=\"modal-actions\">\n            <button type=\"button\" name=\"cancel\" class=\"btn-link modal-action\" data-dismiss=\"modal\">Cancel</button>\n            <button type=\"button\" name=\"setEmployee\" class=\"btn-link modal-action\" data-dismiss=\"modal\">\n              <strong>Set Employee</strong>\n            </button>\n          </div>\n        </div>\n      </div>\n    </div>\n  </div>\n\n  <!-- <div class=\"dashhead-toolbar\">\n    <button type=\"button\" id=\"help-button\" class=\"btn btn-xs btn-pill btn-info\" style=\"margin-top: 7px;\"><span class=\"icon icon-help-with-circle\"></span> Help</button>\n  </div> -->\n</div>\n<div id='breadcrumbs' class=\"breadcrumbs\"></div>\n<div id=\"success-notification\" class=\"notifications center-block alert alert-success text-center\" role=\"alert\" style=\"display: none;\"></div>\n<div id=\"error-notification\" class=\"notifications center-block alert alert-danger text-center\" role=\"alert\" style=\"display: none;\"></div>\n";
 },"useData":true});
 
 this["openmoney"]["employee"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
@@ -4132,11 +4216,12 @@ module.exports = Marionette.ItemView.extend({
         // Self.patrons = options.patrons;
         // Self.patrons_id = options.patrons_id;
         Self.key = options.key;
+        Self.templates = options.templates;
         //Self.journals = options.journals;
         //Self.currencies = options.currencies;
         //this.render();
         //console.log('card merchant', Self.merchant);
-        // Self.listenTo(Self.journals, 'sync reset', Self.render);
+        Self.listenTo(Self.templates, 'sync reset', Self.render);
         // Self.listenTo(Self.currencies, 'sync reset', Self.render);
         var id = 'cards~' + Self.merchantname + '~' + Self.key;
         console.log("cardsID", id);
@@ -4249,6 +4334,64 @@ module.exports = Marionette.ItemView.extend({
       }
     },
 
+    drawQr: function(data){
+      for(var i = 0; i < data.cards.length; i++){
+
+        if(typeof data.img != 'undefined'){
+
+          var canvas = document.getElementById("frontCanvas" + data.cards[i].key);
+          //var canvas = Self.$('#frontCanvas' + data.cards[i].key)[0];
+          if(typeof canvas != 'undefined' && canvas != null){
+            var ctx = canvas.getContext("2d");
+            //reset the width if it has been changed.
+            canvas.width = Self.$('#frontCanvas' + data.cards[i].key).width();
+            canvas.height = canvas.width * (data.img.height / data.img.width);
+            Self.$('#frontCanvas' + data.cards[i].key).css('height', canvas.height);
+            ctx.drawImage(data.img, 0, 0, data.img.width, data.img.height, 0, 0, canvas.width, canvas.height);
+            Self.$("#frontCanvas" + data.cards[i].key).show();
+          }
+
+        }
+
+        if(typeof data.backimg != 'undefined'){
+          var canvas = document.getElementById("backCanvas" + data.cards[i].key);
+          if(typeof canvas != 'undefined' && canvas != null){
+            var ctx = canvas.getContext("2d");
+            //reset the width if it has been changed.
+            canvas.width = Self.$('#backCanvas' + data.cards[i].key).width();
+            canvas.height = canvas.width * (data.backimg.height / data.backimg.width);
+            Self.$('#backCanvas' + data.cards[i].key).css('height', canvas.height);
+            ctx.drawImage(data.backimg, 0, 0, data.backimg.width, data.backimg.height, 0, 0, canvas.width, canvas.height);
+            Self.$("#backCanvas" + data.cards[i].key).show();
+          }
+        }
+
+        //Draw Qr code
+        //var canvas = document.querySelector('canvas')
+        var qrid = Self.$('#qr' + data.cards[i].key)[0];
+        console.log('qrid:',qrid);
+        var qr = new QRious({
+          element: qrid,
+          value: 'https://openmoney.gift' + '/#m/' + Self.merchantname + '/t/' + data.cards[i].key,
+        })
+        if(typeof data.template != 'undefined'){
+          qr.background = data.template.qrBackground;
+          qr.foreground = data.template.qrForeground;
+          qr.level = 'H';
+          //qr.size = 175;
+          qr.size = data.template.qrSize;
+        } else {
+          qr.background = '#000000';
+          qr.foreground = '#FFFFFF';
+          qr.level = 'H';
+          //qr.size = 175;
+          qr.size = 200;
+        }
+
+      }
+      return data;
+    },
+
     render: function(){
 
         console.log('render balance view', Self.model);
@@ -4277,9 +4420,40 @@ module.exports = Marionette.ItemView.extend({
         //   _.extend(data.currencies[i], ViewHelpers);
         // }
 
+        data.cards = [];
+        if(typeof Self.model != 'undefined'){
+          data.cards[0] = Self.model.toJSON();
+        }
+
+        data.template = Self.templates.getDefault();
+        if(typeof data.template != 'undefined'){
+          data.template = data.template.toJSON();
+        } else {
+          data.template = {};
+          data.template.cardspacing = 0;
+          data.template.cardWidth = 308;
+          data.template.cardHeight = 288;
+          data.template.keyDisplay = true;
+          data.template.keySize = 14;
+          data.template.keyLeft = 2;
+          data.template.keyTop = 4;
+          data.template.keyColor = '#ffffff';
+          data.template.qrDisplay = true;
+          data.template.qrBackground = '#ffffff';
+          data.template.qrForeground = '#000000';
+          data.template.qrSize = 267;
+          data.template.qrLeft = 31;
+          data.template.qrTop = 9;
+          data.template.default = false;
+          data.template.vertical = true;
+        }
+
         _.extend(data, ViewHelpers);
         console.log('card view data', data);
         Self.$el.html(Self.template(data));
+
+
+        $('#employee-button').hide();
 
         Self.$('button[name=generate]').off('click').on('click', function(event){
           console.log('generate key event', event);
@@ -4288,31 +4462,85 @@ module.exports = Marionette.ItemView.extend({
 
         Self.$('button[name=print]').off('click').on('click', Self.print);
 
-        var http = location.protocol;
-        var slashes = http.concat("//");
-        var host = slashes.concat(window.location.hostname);
+        // var http = location.protocol;
+        // var slashes = http.concat("//");
+        // var host = slashes.concat(window.location.hostname);
+        //
+        // var canvas = document.querySelector('canvas')
+        // var qrid = document.getElementById('qr')
+        // var qrid = Self.$('#qr')[0];
+        // console.log('qrid:',qrid);
+        // var qr = new QRious({
+        //   element: qrid,
+        //   value: host + '/#merchants/' + Self.merchantname + '/transactions/' + Self.key,
+        // })
+        // // qr.background = '#000'
+        // // qr.foreground = '#fff'
+        // qr.level = 'H';
+        // qr.size = 256;
+        //
+        // //qr.canvas = qrid;
+        //
+        // console.log('qrcode', qr);
+        //
+        // if(typeof qr.image != 'undefined'){
+        //   Self.$('qrcode-image').append(qr.image)
+        //   // qr.canvas.parentNode
+        // }
 
-        var canvas = document.querySelector('canvas')
-        var qrid = document.getElementById('qr')
-        var qrid = Self.$('#qr')[0];
-        console.log('qrid:',qrid);
-        var qr = new QRious({
-          element: qrid,
-          value: host + '/#merchants/' + Self.merchantname + '/transactions/' + Self.key,
-        })
-        // qr.background = '#000'
-        // qr.foreground = '#fff'
-        qr.level = 'H';
-        qr.size = 256;
+        if(typeof data.template != 'undefined' && typeof data.template._attachments != 'undefined' && typeof data.template._attachments['frontImg.png'] != 'undefined'){
+          data.img = new Image();
+          data.img.width = data.template.frontImgWidth;
+          data.img.height = data.template.frontImgHeight;
+          data.img.onload = function(){
+            for(var i = 0; i < data.cards.length; i++){
+              var canvas = document.getElementById("frontCanvas" + data.cards[i].key);
+              //var canvas = Self.$('#frontCanvas' + data.cards[i].key)[0];
+              if(typeof canvas != 'undefined' && canvas != null){
+                var ctx = canvas.getContext("2d");
+                //reset the width if it has been changed.
+                canvas.width = Self.$('#frontCanvas' + data.cards[i].key).width();
+                canvas.height = canvas.width * (data.img.height / data.img.width);
+                Self.$('#frontCanvas' + data.cards[i].key).css('height', canvas.height);
+                ctx.drawImage(data.img, 0, 0, data.img.width, data.img.height, 0, 0, canvas.width, canvas.height);
+                Self.$("#frontCanvas" + data.cards[i].key).show();
 
-        //qr.canvas = qrid;
-
-        console.log('qrcode', qr);
-
-        if(typeof qr.image != 'undefined'){
-          Self.$('qrcode-image').append(qr.image)
-          // qr.canvas.parentNode
+                data.frontimg = new Image();
+                data.frontimg.src = canvas.toDataURL();
+                data.frontimg.width = canvas.width;
+                data.frontimg.height = canvas.height;
+              }
+            }
+          };
+          data.img.src = 'data:' + data.template._attachments['frontImg.png'].content_type + ';base64,' + data.template._attachments['frontImg.png'].data;
         }
+        if(typeof data.template != 'undefined' && typeof data.template._attachments != 'undefined' && typeof data.template._attachments['backImg.png'] != 'undefined'){
+          data.backimg = new Image();
+          data.backimg.width = data.template.backImgWidth;
+          data.backimg.height = data.template.backImgHeight;
+          data.backimg.onload = function(){
+            for(var i = 0; i < data.cards.length; i++){
+              var canvas = document.getElementById("backCanvas" + data.cards[i].key);
+              if(typeof canvas != 'undefined' && canvas != null){
+                var ctx = canvas.getContext("2d");
+                //reset the width if it has been changed.
+                canvas.width = Self.$('#backCanvas' + data.cards[i].key).width();
+                canvas.height = canvas.width * (data.backimg.height / data.backimg.width);
+                Self.$('#backCanvas' + data.cards[i].key).css('height', canvas.height);
+                ctx.drawImage(data.backimg, 0, 0, data.backimg.width, data.backimg.height, 0, 0, canvas.width, canvas.height);
+                Self.$("#backCanvas" + data.cards[i].key).show();
+
+                data.backimage = new Image();
+                data.backimage.src = canvas.toDataURL();
+                data.backimage.width = canvas.width;
+                data.backimage.height = canvas.height;
+              }
+            }
+          };
+          data.backimg.src = 'data:' + data.template._attachments['backImg.png'].content_type + ';base64,' + data.template._attachments['backImg.png'].data;
+        }
+
+        Self.drawQr(data);
 
 
         this.$('[data-sort=basic]').DataTable({
@@ -4466,7 +4694,7 @@ module.exports = Marionette.ItemView.extend({
             if(typeof Self.model == 'undefined'){
               Self.model = new Card();
             }
-            Self.model.set('merchant', Self.merchant);
+            Self.model.set('merchant', Self.merchantname);
             Self.model.set('key', Self.$('input[name=key]').val());
 
             Self.model.set('cardholderID', Self.patrons_id);

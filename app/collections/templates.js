@@ -18,7 +18,6 @@ module.exports = Backbone.Collection.extend({
   },
   parse: function(response){
     console.log('templates collection parse method', response);
-    console.log('steward', Self.steward);
     var resultsArray = [];
     resultsArray = response;
     console.log('templates collection parse results: ', resultsArray);

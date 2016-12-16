@@ -358,6 +358,7 @@ module.exports = Marionette.AppRouter.extend({
 	},
 	transactions: function(merchantname, key) {
 		console.log('Goto: TransactionsView', merchantname, key);
+    Self.merchantname = merchantname;
     Self.initializeData(function(err, res){
       if(typeof Self.merchant != 'undefined' && Self.merchant.get('merchantname') == merchantname){
         Self.page.set('currentPage', 'transactions');
@@ -384,7 +385,7 @@ module.exports = Marionette.AppRouter.extend({
           breadcrumbRegion.show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
         }
         Self.navigationOff();
-        Self.changePage(new BalanceView({ merchantname: merchantname, key: key }),{pageName: 'balance'});
+        Self.changePage(new BalanceView({ merchantname: merchantname, templates: Self.templatesCollection, key: key }),{pageName: 'balance'});
       } else {
         //merchant isn't logged in and card is not defined.
         Self.welcome();
@@ -790,16 +791,19 @@ module.exports = Marionette.AppRouter.extend({
     };
 
     parallel.templates = function(callback){
-      if(typeof Self.merchant == 'undefined' || Self.merchant.get('merchantname') == '' || typeof Self.merchant.get('access_token') == 'undefined'){
+
+      if((typeof Self.merchant == 'undefined' || Self.merchant.get('merchantname') == '' ) && (typeof Self.merchantname == 'undefined' || Self.merchantname == '')){
         callback(null, null);
       } else {
         if(typeof Self.templatesCollection != 'undefined'){
           callback(null, Self.templatesCollection);
         } else {
-          Self.templatesCollection = new Templates([], {merchant: Self.merchant});
-          Self.templatesCollection.credentials = {};
-          Self.templatesCollection.credentials.username = Self.merchant.get('merchantname');
-          Self.templatesCollection.credentials.password = Self.merchant.get('password');
+          if(typeof Self.merchant != 'undefined' && Self.merchant.get('merchantname') != ''){
+            Self.templatesCollection = new Templates([], {merchant: Self.merchant});
+          } else {
+            Self.templatesCollection = new Templates([], {merchant: new Merchant({merchantname: Self.merchantname})});
+          }
+
           Self.templatesCollection.fetch({
             success: function(collection, response){
               console.log('successfully fetched templates collection', collection, response);

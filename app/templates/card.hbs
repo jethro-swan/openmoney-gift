@@ -14,6 +14,9 @@
     height:{{./template/keySize}}pt;
     width:{{./template/keySize}}pt;
 }
+#stats {
+  border:1px solid #FFFFFF;
+}
 @media print {
   button[name=showedit] {
     display: none;
@@ -55,7 +58,24 @@
     padding-left: 0;
     padding-right: 0;
   }
+  .cards {
+    padding: 0;
+    margin: 0;
+    page-break-after: avoid;
+  }
+  #stats {
+    border: 2px solid black;
+    border-radius: 0;
+    /*margin:5px;*/
+  }
   @page { margin: 0; }
+  html, body { height: 99%; }
+  .table>thead>tr>th {
+    border-bottom: none;
+  }
+  .table>tbody>tr>td {
+    border-top: none;
+  }
 }
 </style>
 <div class="col-sm-12" style="padding-top: 10px;">
@@ -76,11 +96,11 @@
       <tr style="background-color: {{#disabled}}#E64759{{else}}#159c6e{{/disabled}}">
         <td>
 
-            <div id="stats" class="statcard statcard-{{#disabled}}danger{{else}}success{{/disabled}} text-left" style="border: 2px solid #FFFFFF;width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;float: left;margin-right: {{./template/cardspacing}}px;margin-bottom: {{./template/cardspacing}}px;">
+            <div id="stats" class="statcard statcard-{{#disabled}}danger{{else}}success{{/disabled}} text-left" style="width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;float: left;margin-right: {{./template/cardspacing}}px;margin-bottom: {{./template/cardspacing}}px;">
               <canvas id="frontCanvas{{key}}" style="width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;display: none;"></canvas>
             </div>
 
-            <div id="stats" class="statcard statcard-{{#disabled}}danger{{else}}success{{/disabled}} text-left" style="border: 2px solid #FFFFFF;width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;float: right;margin-left: {{./template/cardspacing}}px;margin-bottom: {{./template/cardspacing}}px;">
+            <div id="stats" class="statcard statcard-{{#disabled}}danger{{else}}success{{/disabled}} text-left" style="width:{{./template/cardWidth}}px; height: {{./template/cardHeight}}px;float: right;margin-left: {{./template/cardspacing}}px;margin-bottom: {{./template/cardspacing}}px;">
               <div style="position: relative;">
                 <span id="keyText{{key}}" class="statcard-number keypos" style="color: {{./template/keyColor}};font-size: {{./template/keySize}}pt;position: absolute;top: {{./template/keyTop}}px;left: {{./template/keyLeft}}px;"><div class="{{#./template/vertical}}vertical{{/./template/vertical}}">{{key}}</div></span>
                 <canvas id="qr{{key}}" class="qrpos" style="position: absolute;top: {{./template/qrTop}}px;left: {{./template/qrLeft}}px;"></canvas>
@@ -88,7 +108,7 @@
               </div>
             </div>
 
-            <div style="float:left;"><h2 class="statcard-number text-left">BALANCE</h2>
+            <div class="balance" style="float:left;"><h2 class="statcard-number text-left">BALANCE</h2>
             {{#currencies}}
               {{#if balance}}
               <div><h3 class="statcard-number text-left">

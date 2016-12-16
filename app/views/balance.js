@@ -39,11 +39,12 @@ module.exports = Marionette.ItemView.extend({
         // Self.patrons = options.patrons;
         // Self.patrons_id = options.patrons_id;
         Self.key = options.key;
+        Self.templates = options.templates;
         //Self.journals = options.journals;
         //Self.currencies = options.currencies;
         //this.render();
         //console.log('card merchant', Self.merchant);
-        // Self.listenTo(Self.journals, 'sync reset', Self.render);
+        Self.listenTo(Self.templates, 'sync reset', Self.render);
         // Self.listenTo(Self.currencies, 'sync reset', Self.render);
         var id = 'cards~' + Self.merchantname + '~' + Self.key;
         console.log("cardsID", id);
@@ -156,6 +157,64 @@ module.exports = Marionette.ItemView.extend({
       }
     },
 
+    drawQr: function(data){
+      for(var i = 0; i < data.cards.length; i++){
+
+        if(typeof data.img != 'undefined'){
+
+          var canvas = document.getElementById("frontCanvas" + data.cards[i].key);
+          //var canvas = Self.$('#frontCanvas' + data.cards[i].key)[0];
+          if(typeof canvas != 'undefined' && canvas != null){
+            var ctx = canvas.getContext("2d");
+            //reset the width if it has been changed.
+            canvas.width = Self.$('#frontCanvas' + data.cards[i].key).width();
+            canvas.height = canvas.width * (data.img.height / data.img.width);
+            Self.$('#frontCanvas' + data.cards[i].key).css('height', canvas.height);
+            ctx.drawImage(data.img, 0, 0, data.img.width, data.img.height, 0, 0, canvas.width, canvas.height);
+            Self.$("#frontCanvas" + data.cards[i].key).show();
+          }
+
+        }
+
+        if(typeof data.backimg != 'undefined'){
+          var canvas = document.getElementById("backCanvas" + data.cards[i].key);
+          if(typeof canvas != 'undefined' && canvas != null){
+            var ctx = canvas.getContext("2d");
+            //reset the width if it has been changed.
+            canvas.width = Self.$('#backCanvas' + data.cards[i].key).width();
+            canvas.height = canvas.width * (data.backimg.height / data.backimg.width);
+            Self.$('#backCanvas' + data.cards[i].key).css('height', canvas.height);
+            ctx.drawImage(data.backimg, 0, 0, data.backimg.width, data.backimg.height, 0, 0, canvas.width, canvas.height);
+            Self.$("#backCanvas" + data.cards[i].key).show();
+          }
+        }
+
+        //Draw Qr code
+        //var canvas = document.querySelector('canvas')
+        var qrid = Self.$('#qr' + data.cards[i].key)[0];
+        console.log('qrid:',qrid);
+        var qr = new QRious({
+          element: qrid,
+          value: 'https://openmoney.gift' + '/#m/' + Self.merchantname + '/t/' + data.cards[i].key,
+        })
+        if(typeof data.template != 'undefined'){
+          qr.background = data.template.qrBackground;
+          qr.foreground = data.template.qrForeground;
+          qr.level = 'H';
+          //qr.size = 175;
+          qr.size = data.template.qrSize;
+        } else {
+          qr.background = '#000000';
+          qr.foreground = '#FFFFFF';
+          qr.level = 'H';
+          //qr.size = 175;
+          qr.size = 200;
+        }
+
+      }
+      return data;
+    },
+
     render: function(){
 
         console.log('render balance view', Self.model);
@@ -184,9 +243,40 @@ module.exports = Marionette.ItemView.extend({
         //   _.extend(data.currencies[i], ViewHelpers);
         // }
 
+        data.cards = [];
+        if(typeof Self.model != 'undefined'){
+          data.cards[0] = Self.model.toJSON();
+        }
+
+        data.template = Self.templates.getDefault();
+        if(typeof data.template != 'undefined'){
+          data.template = data.template.toJSON();
+        } else {
+          data.template = {};
+          data.template.cardspacing = 0;
+          data.template.cardWidth = 308;
+          data.template.cardHeight = 288;
+          data.template.keyDisplay = true;
+          data.template.keySize = 14;
+          data.template.keyLeft = 2;
+          data.template.keyTop = 4;
+          data.template.keyColor = '#ffffff';
+          data.template.qrDisplay = true;
+          data.template.qrBackground = '#ffffff';
+          data.template.qrForeground = '#000000';
+          data.template.qrSize = 267;
+          data.template.qrLeft = 31;
+          data.template.qrTop = 9;
+          data.template.default = false;
+          data.template.vertical = true;
+        }
+
         _.extend(data, ViewHelpers);
         console.log('card view data', data);
         Self.$el.html(Self.template(data));
+
+
+        $('#employee-button').hide();
 
         Self.$('button[name=generate]').off('click').on('click', function(event){
           console.log('generate key event', event);
@@ -195,31 +285,85 @@ module.exports = Marionette.ItemView.extend({
 
         Self.$('button[name=print]').off('click').on('click', Self.print);
 
-        var http = location.protocol;
-        var slashes = http.concat("//");
-        var host = slashes.concat(window.location.hostname);
+        // var http = location.protocol;
+        // var slashes = http.concat("//");
+        // var host = slashes.concat(window.location.hostname);
+        //
+        // var canvas = document.querySelector('canvas')
+        // var qrid = document.getElementById('qr')
+        // var qrid = Self.$('#qr')[0];
+        // console.log('qrid:',qrid);
+        // var qr = new QRious({
+        //   element: qrid,
+        //   value: host + '/#merchants/' + Self.merchantname + '/transactions/' + Self.key,
+        // })
+        // // qr.background = '#000'
+        // // qr.foreground = '#fff'
+        // qr.level = 'H';
+        // qr.size = 256;
+        //
+        // //qr.canvas = qrid;
+        //
+        // console.log('qrcode', qr);
+        //
+        // if(typeof qr.image != 'undefined'){
+        //   Self.$('qrcode-image').append(qr.image)
+        //   // qr.canvas.parentNode
+        // }
 
-        var canvas = document.querySelector('canvas')
-        var qrid = document.getElementById('qr')
-        var qrid = Self.$('#qr')[0];
-        console.log('qrid:',qrid);
-        var qr = new QRious({
-          element: qrid,
-          value: host + '/#merchants/' + Self.merchantname + '/transactions/' + Self.key,
-        })
-        // qr.background = '#000'
-        // qr.foreground = '#fff'
-        qr.level = 'H';
-        qr.size = 256;
+        if(typeof data.template != 'undefined' && typeof data.template._attachments != 'undefined' && typeof data.template._attachments['frontImg.png'] != 'undefined'){
+          data.img = new Image();
+          data.img.width = data.template.frontImgWidth;
+          data.img.height = data.template.frontImgHeight;
+          data.img.onload = function(){
+            for(var i = 0; i < data.cards.length; i++){
+              var canvas = document.getElementById("frontCanvas" + data.cards[i].key);
+              //var canvas = Self.$('#frontCanvas' + data.cards[i].key)[0];
+              if(typeof canvas != 'undefined' && canvas != null){
+                var ctx = canvas.getContext("2d");
+                //reset the width if it has been changed.
+                canvas.width = Self.$('#frontCanvas' + data.cards[i].key).width();
+                canvas.height = canvas.width * (data.img.height / data.img.width);
+                Self.$('#frontCanvas' + data.cards[i].key).css('height', canvas.height);
+                ctx.drawImage(data.img, 0, 0, data.img.width, data.img.height, 0, 0, canvas.width, canvas.height);
+                Self.$("#frontCanvas" + data.cards[i].key).show();
 
-        //qr.canvas = qrid;
-
-        console.log('qrcode', qr);
-
-        if(typeof qr.image != 'undefined'){
-          Self.$('qrcode-image').append(qr.image)
-          // qr.canvas.parentNode
+                data.frontimg = new Image();
+                data.frontimg.src = canvas.toDataURL();
+                data.frontimg.width = canvas.width;
+                data.frontimg.height = canvas.height;
+              }
+            }
+          };
+          data.img.src = 'data:' + data.template._attachments['frontImg.png'].content_type + ';base64,' + data.template._attachments['frontImg.png'].data;
         }
+        if(typeof data.template != 'undefined' && typeof data.template._attachments != 'undefined' && typeof data.template._attachments['backImg.png'] != 'undefined'){
+          data.backimg = new Image();
+          data.backimg.width = data.template.backImgWidth;
+          data.backimg.height = data.template.backImgHeight;
+          data.backimg.onload = function(){
+            for(var i = 0; i < data.cards.length; i++){
+              var canvas = document.getElementById("backCanvas" + data.cards[i].key);
+              if(typeof canvas != 'undefined' && canvas != null){
+                var ctx = canvas.getContext("2d");
+                //reset the width if it has been changed.
+                canvas.width = Self.$('#backCanvas' + data.cards[i].key).width();
+                canvas.height = canvas.width * (data.backimg.height / data.backimg.width);
+                Self.$('#backCanvas' + data.cards[i].key).css('height', canvas.height);
+                ctx.drawImage(data.backimg, 0, 0, data.backimg.width, data.backimg.height, 0, 0, canvas.width, canvas.height);
+                Self.$("#backCanvas" + data.cards[i].key).show();
+
+                data.backimage = new Image();
+                data.backimage.src = canvas.toDataURL();
+                data.backimage.width = canvas.width;
+                data.backimage.height = canvas.height;
+              }
+            }
+          };
+          data.backimg.src = 'data:' + data.template._attachments['backImg.png'].content_type + ';base64,' + data.template._attachments['backImg.png'].data;
+        }
+
+        Self.drawQr(data);
 
 
         this.$('[data-sort=basic]').DataTable({
@@ -373,7 +517,7 @@ module.exports = Marionette.ItemView.extend({
             if(typeof Self.model == 'undefined'){
               Self.model = new Card();
             }
-            Self.model.set('merchant', Self.merchant);
+            Self.model.set('merchant', Self.merchantname);
             Self.model.set('key', Self.$('input[name=key]').val());
 
             Self.model.set('cardholderID', Self.patrons_id);
