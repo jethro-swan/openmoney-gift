@@ -96,13 +96,20 @@
   </div>
 
   <div class="balance" style="float:left;"><h2 class="statcard-number text-left">BALANCE</h2>
-  {{#currencies}}
+  <!-- {{#currencies}}
     {{#if balance}}
     <div><h3 class="statcard-number text-left">
       {{currency_name}} {{decimal_places balance}}
     </h3></div>
     {{/if}}
-  {{/currencies}}
+  {{/currencies}} -->
+  {{#each balances}}
+    {{#if this}}
+    <div><h3 class="statcard-number text-left">
+    {{../decimal_places this}} {{@key}}
+    </h3></div>
+    {{/if}}
+  {{/each}}
   </div>
   <!-- <div id="stats" class="statcard statcard-success p-a-md m-b text-left">
     <span class="statcard-number" style="float: left">
