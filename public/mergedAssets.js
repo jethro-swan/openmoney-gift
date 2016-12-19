@@ -4132,11 +4132,13 @@ this["openmoney"]["templatesPrint"] = Handlebars.template({"1":function(containe
 this["openmoney"]["transactions"] = Handlebars.template({"1":function(container,depth0,helpers,partials,data) {
     var stack1;
 
-  return ((stack1 = helpers.unless.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.disabled : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "");
+  return "        <!-- "
+    + ((stack1 = helpers.unless.call(depth0 != null ? depth0 : {},(depth0 != null ? depth0.disabled : depth0),{"name":"unless","hash":{},"fn":container.program(2, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + " -->\n";
 },"2":function(container,depth0,helpers,partials,data) {
     var helper, alias1=depth0 != null ? depth0 : {}, alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "          <tr><td style=\"border-top: none;\">\n            <button type=\"button\" id=\""
+  return " -->\n          <tr><td style=\"border-top: none;\">\n            <button type=\"button\" id=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + "~button\" class=\"currency-buttons btn btn-lg btn-default-outline action-spacing highlight\" style=\"width: 100%; margin: 0;\">"
     + alias4(((helper = (helper = helpers.currency_name || (depth0 != null ? depth0.currency_name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency_name","hash":{},"data":data}) : helper)))
@@ -4144,7 +4146,7 @@ this["openmoney"]["transactions"] = Handlebars.template({"1":function(container,
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
     + ")</button>\n            <div class=\""
     + alias4(((helper = (helper = helpers.currency || (depth0 != null ? depth0.currency : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"currency","hash":{},"data":data}) : helper)))
-    + " value-buttons\">\n              <button type=\"button\" class=\"btn btn-lg btn-success-outline action-spacing tab-spacing add-value add-value-selected\" style=\"width: 80%; margin: 10px;\">\n                <span class=\"icon icon-plus icon-padding\"></span>\n                ADD VALUE\n              </button>\n              <button type=\"button\" class=\"btn btn-lg btn-danger-outline action-spacing tab-spacing redeem-value\" style=\"width: 80%; margin: 10px;\">\n                <span class=\"icon icon-minus icon-padding\"></span>\n                REDEEM VALUE\n              </button>\n            </div>\n          </td></tr>\n";
+    + " value-buttons\">\n              <button type=\"button\" class=\"btn btn-lg btn-success-outline action-spacing tab-spacing add-value add-value-selected\" style=\"width: 80%; margin: 10px;\">\n                <span class=\"icon icon-plus icon-padding\"></span>\n                ADD VALUE\n              </button>\n              <button type=\"button\" class=\"btn btn-lg btn-danger-outline action-spacing tab-spacing redeem-value\" style=\"width: 80%; margin: 10px;\">\n                <span class=\"icon icon-minus icon-padding\"></span>\n                REDEEM VALUE\n              </button>\n            </div>\n          </td></tr>\n        <!-- ";
 },"4":function(container,depth0,helpers,partials,data) {
     var helper;
 
@@ -6549,11 +6551,12 @@ module.exports = Marionette.ItemView.extend({
               currencyModel.credentials.token = Self.merchant.get('access_token');
               //currencyModel.fetch();
               // var currencyModel = new Currency();
-              currencyModel.set('disabled', active == 'disabled');
+              currencyModel.set('disabled', active == 'disable');
               console.log('Currency', currencyModel);
               currencyModel.save({
                 success: function(model, response){
                   console.log('successfully saved curreny', model, response);
+                  Self.currencies.fetch();
                 },
                 error: function(model, response){
                   console.log('failed to save curreny', model, response);

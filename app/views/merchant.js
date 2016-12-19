@@ -143,11 +143,12 @@ module.exports = Marionette.ItemView.extend({
               currencyModel.credentials.token = Self.merchant.get('access_token');
               //currencyModel.fetch();
               // var currencyModel = new Currency();
-              currencyModel.set('disabled', active == 'disabled');
+              currencyModel.set('disabled', active == 'disable');
               console.log('Currency', currencyModel);
               currencyModel.save({
                 success: function(model, response){
                   console.log('successfully saved curreny', model, response);
+                  Self.currencies.fetch();
                 },
                 error: function(model, response){
                   console.log('failed to save curreny', model, response);
