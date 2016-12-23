@@ -147,6 +147,8 @@ module.exports = Marionette.AppRouter.extend({
     'logout': 'logout',
 		'signup': 'register',
 		'forgot': 'forgot',
+    'iphone': 'welcome',
+    'operation': 'welcome',
     'forgot/:merchantname/:forgot_token': 'reset',
 		'merchants/:merchantname/patrons': 'patrons',
     'merchants/:merchantname/patrons/:_id': 'patron',

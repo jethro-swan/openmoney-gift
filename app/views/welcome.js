@@ -38,6 +38,9 @@ module.exports = Marionette.ItemView.extend({
         options.data = data;
         Self.$el.html(Self.template(options));
 
+        Self.$('#try').off('click').on('click', function(){
+          router.navigate('#signup');
+        })
         // Self.marketingOn();
         // setTimeout(function(){
         //   console.log('currentFragment' + Backbone.history.getFragment());
