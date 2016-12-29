@@ -144,7 +144,7 @@ module.exports = Marionette.ItemView.extend({
           _.extend(data.cards[i], ViewHelpers);
           data.cards[i].balance = {};
 
-          data.cards[i].journals = Self.journals.where({key: data.cards[i].key.toLoserCase()})
+          data.cards[i].journals = Self.journals.where({key: data.cards[i].key.toLowerCase()})
           for(var j = 0; j < data.cards[i].journals.length; j++){
             data.cards[i].journals[j] = data.cards[i].journals[j].toJSON();
             //create a key value pair for currency balance for each card.
