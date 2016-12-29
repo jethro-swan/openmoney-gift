@@ -3267,7 +3267,7 @@ this["openmoney"]["navigation"] = Handlebars.template({"1":function(container,de
   stack1 = ((helper = (helper = helpers.merchant || (depth0 != null ? depth0.merchant : depth0)) != null ? helper : alias2),(options={"name":"merchant","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
   if (!helpers.merchant) { stack1 = alias4.call(depth0,stack1,options)}
   if (stack1 != null) { buffer += stack1; }
-  buffer += "/transactions\">\n        <img id=\"logo\" src=\"public/assets/images/open-money-gift-text-vector.svg\" class=\"svg img-responsive center-block\" alt=\"Openmoney Gift Logo\" style=\"height: 214px;\"/>\n      </a>\n    </div>\n    <div id=\"nav-toggleable-md\" class=\"nav-toggleable-md collapse\">\n      <ul class=\"nav nav-bordered nav-stacked\">\n        <li "
+  buffer += "/transactions\">\n        <img id=\"logo\" src=\"public/assets/images/open-money-gift-text-vector.svg\" class=\"svg img-responsive center-block\" alt=\"Openmoney Gift Logo\" style=\"width: 214px;\"/>\n      </a>\n    </div>\n    <div id=\"nav-toggleable-md\" class=\"nav-toggleable-md collapse\">\n      <ul class=\"nav nav-bordered nav-stacked\">\n        <li "
     + ((stack1 = (helpers.if_eq || (depth0 && depth0.if_eq) || alias2).call(alias1,(depth0 != null ? depth0.page : depth0),"patrons",{"name":"if_eq","hash":{},"fn":container.program(3, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
     + ">\n          <a id=\"patrons\" href=\"#merchants/";
   stack1 = ((helper = (helper = helpers.merchant || (depth0 != null ? depth0.merchant : depth0)) != null ? helper : alias2),(options={"name":"merchant","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data}),(typeof helper === alias3 ? helper.call(alias1,options) : helper));
@@ -5048,7 +5048,7 @@ module.exports = Marionette.ItemView.extend({
         if(typeof Self.model != 'undefined'){
           data = Self.model.toJSON();
         }
-        data.journals = Self.journals.where({key: Self.card_key})
+        data.journals = Self.journals.where({key: Self.card_key.toLowerCase()})
         for(var i = 0; i < data.journals.length; i++){
           data.journals[i] = data.journals[i].toJSON();
           _.extend(data.journals[i], ViewHelpers);

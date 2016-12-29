@@ -210,7 +210,7 @@ module.exports = Marionette.ItemView.extend({
         if(typeof Self.model != 'undefined'){
           data = Self.model.toJSON();
         }
-        data.journals = Self.journals.where({key: Self.card_key})
+        data.journals = Self.journals.where({key: Self.card_key.toLowerCase()})
         for(var i = 0; i < data.journals.length; i++){
           data.journals[i] = data.journals[i].toJSON();
           _.extend(data.journals[i], ViewHelpers);
