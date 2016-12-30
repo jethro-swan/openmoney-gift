@@ -21,7 +21,7 @@
     </thead>
     <tbody class="table-rows">
       {{#currencies}}
-        {{#unless disabled}}
+
           <tr><td style="border-top: none;">
             <button type="button" id="{{currency}}~button" class="currency-buttons btn btn-lg btn-default-outline action-spacing highlight" style="width: 100%; margin: 0;">{{currency_name}} ({{currency}})</button>
             <div class="{{currency}} value-buttons">
@@ -35,7 +35,7 @@
               </button>
             </div>
           </td></tr>
-        {{/unless}}
+        
       {{/currencies}}
     </tbody>
   </table>
