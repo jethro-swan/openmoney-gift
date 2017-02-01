@@ -12,9 +12,9 @@ module.exports = Backbone.Model.extend({
         options.url = '/V1/merchants/' + model.get('merchant').get('merchantname') + '/currencies';
       } else if(method.toLowerCase() == 'update'){
         //use the id attribute for update because the id has not been modified.
-        options.url = '/V2/stewards/' + model.get('merchant').get('merchantname') + '/namespaces/' + model.get('currency_namespace') + '/currencies/' + model.get('currency');
+        options.url = '/V2/stewards/' + model.get('merchant').get('merchantname') + '/currencies/' + model.get('id').split('~')[1];
       } else {
-        options.url = '/V2/stewards/' + model.get('merchant').get('merchantname') + '/namespaces/' + model.get('currency_namespace') + '/currencies/' + model.get('currency');
+        options.url = '/V2/stewards/' + model.get('merchant').get('merchantname') + '/currencies/' + model.get('currency') + '.' + model.get('currency_namespace');
       }
       return Backbone.sync.apply(this, arguments);
     },

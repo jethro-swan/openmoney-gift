@@ -76,6 +76,11 @@
     <h2><div class="statcard-desc">{{firstname}} {{lastname}}</div></h2>
     <h3><a href="mailto:{{email}}?subject={{firstname}}%20{{lastname}}%20{{phone}}" style="color: #FFF;" class="email-link">{{email}}</a></h3>
     <h4>{{phone}}</h4>
+    {{#if_eq firstname 'Openmoney'}}
+    <div>
+      For every patron you make, you contribute 1 of your gift dollars to openmoney developemet. Your contribution levels can be adjusted in your settings for your currencies. We ask you to honor your currency by redeeming your contributed gift dollars for your local currency.
+    </div>
+    {{/if_eq}}
     <h2 class="statcard-number text-right">BALANCE</h2>
     {{#currencies}}
       {{#if balance}}
@@ -83,6 +88,23 @@
         <h3 class="statcard-number text-right">
           {{currency_name}} {{decimal_places balance}}
         </h3>
+        {{#../if_eq ../firstname 'Openmoney'}}
+        <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top" class="text-right" style="padding: 20px;">
+          <input type="hidden" name="business" value="deefactorial@gmail.com">
+          <input type="hidden" name="cmd" value="_donations">
+          <input type="hidden" name="item_name" value="Openmoney Development">
+          <input type="hidden" name="item_number" value="Gift Card Program">
+          <input type="hidden" name="currency_code" value="USD">
+          <input type="hidden" name="amount" value="{{decimal_places balance}}" />
+          <div class="text-center">
+            <div style="padding-bottom:10px;">
+              <button type="submit" name="submit" alt="PayPal - The safer, easier way to pay online!" class="btn btn-pill btn-warning" style="color:#000000; font-weight:bold;">REDEEM CONTRIBUTIONS</button>
+            </div>
+            <input type="image" src="/public/assets/images/btn_donateCC.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+          </div>
+          <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+        </form>
+        {{/../if_eq}}
       </div>
       {{/if}}
     {{/currencies}}

@@ -270,6 +270,9 @@ module.exports = Marionette.ItemView.extend({
             Self.model.set('currency_color', Self.$('input[name=currency_color]').val());
             Self.model.set('currency_name', Self.$('input[name=currency_name]').val());
             Self.model.set('contributionPerPatron', Self.$('input[name=contributionPerPatron]').val());
+            Self.model.set('peggedValue', Self.$('input[name=peggedValue]').val());
+            Self.model.set('peggedCurrency', Self.$('select[name=peggedCurrency]').val());
+
 
             //console.log('namespace save', Self.model.toJSON());
             Self.model.credentials = {};
