@@ -290,6 +290,11 @@ module.exports = Marionette.LayoutView.extend({
       data.merchantname = Self.merchantname;
       data.patrons = Self.patrons.toJSON();
       data.currencies = Self.currencies.toJSON();
+      for(var i = 0; i < data.currencies.length; i++){
+        if(data.currencies[i].currency === 'cc'){
+          data.currencies.splice(i, 1);
+        }
+      }
 
       data.backonly = true;
       console.log('templates data:', data);
