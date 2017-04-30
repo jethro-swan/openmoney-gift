@@ -120,6 +120,65 @@
     <input type="number" id="page2right" name="page2right" value="{{backRightMargin}}" placeholder="px" class="form-control" />
   </div>
 
+  <div class="col-sm-12 form-group text-left">
+    <div class="checkbox custom-control custom-checkbox">
+      <label>
+        <input type="checkbox" id="backonly" name="backonly" value="true" {{#backonly}}checked="checked"{{/backonly}} />
+        <span class="custom-control-indicator"></span>
+        back only
+      </label>
+    </div>
+  </div>
+
+  <div class="text-right printTemplate" style="padding-bottom: 20px;">
+    <button type="button" name="print" class="btn btn-lg btn-primary-outline">Print Template</button>
+  </div>
+</div>
+<div class="col-sm-6 maindiv" style="padding-top: 10px;">
+
+
+  <div class="col-sm-6 form-group text-left">
+    <label for="currency">currency</label>
+    <select class="custom-select" name="currencyID">
+      {{#each currencies}}
+        {{#this}}
+          {{#unless disabled}}<option value="{{currency}}">{{currency}}</option>{{/unless}}
+        {{/this}}
+      {{/each}}
+    </select>
+    <!-- <input type="text" id="currency" name="currency" value="{{currency}}" placeholder="fully qualified currency unit" class="form-control" /> -->
+  </div>
+
+  <div class="col-sm-6 form-group text-left">
+    <label for="Amount">load amount</label>
+    <input type="number" id="amount" name="amount" value="{{amount}}" placeholder="amount" class="form-control" />
+  </div>
+
+  <div class="col-sm-12 form-group text-left">
+    <label for="patronID">Patron</label>
+    <select class="custom-select" name="patronID">
+      {{#each patrons}}
+        {{#this}}
+          <option value="{{_id}}">{{firstname}} {{lastname}}</option>
+        {{/this}}
+      {{/each}}
+    </select>
+  </div>
+
+  <div class="col-sm-12 form-group text-left">
+    <div class="checkbox custom-control custom-checkbox">
+      <label>
+        <input type="checkbox" name="disabled" value="true" {{#disabled}}checked="checked"{{/disabled}} />
+        <span class="custom-control-indicator"></span>
+        Freeze Card
+      </label>
+    </div>
+  </div>
+
+  <div class="text-right printTemplate" style="padding-bottom: 20px;">
+    <button type="button" name="save" class="btn btn-lg btn-primary-outline">Save Qr Codes to Patron</button>
+  </div>
+
   <!-- <div class="col-sm-6">
     <div class="checkbox custom-control custom-checkbox">
       <label>
@@ -130,8 +189,6 @@
     </div>
   </div> -->
 
-  <div class="text-right printTemplate" style="padding-bottom: 20px;">
-    <button type="button" name="print" class="btn btn-lg btn-primary-outline">Print Template</button>
-  </div>
+
 </div>
 <div id="cards" class="col-sm-12 cards"></div>

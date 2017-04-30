@@ -1,3 +1,4 @@
+{{#unless backonly}}
 <div class="page1" style="overflow: hidden;padding-top: {{frontTopMargin}}px;padding-left: {{frontLeftMargin}}px;page-break-after: always;">
   {{#cards}}
   <div id="stats" class="statcard text-left" style="width:{{../cardWidth}}px; height: {{../cardHeight}}px;float: left;margin-right: {{../cardSpacing}}px;margin-bottom: {{../cardSpacing}}px;">
@@ -5,6 +6,7 @@
   </div>
   {{/cards}}
 </div>
+{{/unless}}
 <div class="page2" style="overflow: hidden;padding-top: {{backTopMargin}}px;padding-right: {{backRightMargin}}px;">
   {{#cards}}
   <div id="stats" class="statcard text-left" style="width:{{../cardWidth}}px; height: {{../cardHeight}}px;float: right;margin-left: {{../cardSpacing}}px;margin-bottom: {{../cardSpacing}}px;">

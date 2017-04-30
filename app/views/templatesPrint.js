@@ -15,6 +15,9 @@ var Common = require('../common');
 var Self = {};
 var crypto = require('crypto');
 var QRious = require('qrious');
+var Card = require('../models/card');
+var Journal = require('../models/journal');
+var async = require('async');
 
 module.exports = Marionette.LayoutView.extend({
 
@@ -27,8 +30,13 @@ module.exports = Marionette.LayoutView.extend({
       Self.merchantname = options.merchantname;
       Self.templates = options.templates;
       Self.templateName = options.templateName;
+      Self.patrons = options.patrons;
+      Self.currencies = options.currencies;
+      Self.cards = options.cards;
+      Self.journals = options.journals;
       Self.listenTo(Self.templates, 'sync reset', Self.render);
-      //Self.listenTo(Self.currencies, 'sync reset', Self.render);
+      Self.listenTo(Self.patrons, 'sync reset', Self.render);
+      Self.listenTo(Self.currencies, 'sync reset', Self.render);
   },
   cardSpacing: 0,
   cardWidth: 3.375,
@@ -57,8 +65,96 @@ module.exports = Marionette.LayoutView.extend({
   },
 
   save: function(data){
+    console.log("save", data);
+    //console.log("cards", data.cards);
+    console.log('cardholderID', Self.$('select[name=patronID]').val());
+    //for each card, create a card on the patrons account,
 
+    var tasks = {};
 
+    data.cards.forEach(function(keycard){
+      console.log("key", keycard.key);
+
+      tasks[keycard.key] = function(callback){
+        var card = new Card();
+        if(typeof Self.model != 'undefined'){
+          card.set('_id', Self.model.get('_id'));
+        }
+        card.set('merchant', Self.merchant);
+        card.set('key', keycard.key);
+        card.set('cardholderID', Self.$('select[name=patronID]').val());
+        card.set('disabled', Self.$('input[name=disabled]').prop('checked') === true);
+        card.credentials = {};
+        card.credentials.username = Self.merchant.get('merchantname');
+        card.credentials.password = Self.merchant.get('password');
+        card.save({},{
+          success: function(model, response){
+            console.log('successfully saved model', model, response);
+            $('#success-notification').html('Successfully saved card:' + model.get('key')).show();
+
+            var journal = new Journal();
+            journal.set('key', keycard.key);
+            journal.set('polarity', 'load');
+            journal.set('currency', Self.$('select[name=currencyID]').val());
+            journal.set('amount', parseFloat(Self.$('input[name=amount]').val()));
+            //journal.set(currency, parseFloat(amount));
+            journal.set('card', card);
+            journal.set('merchant', Self.merchant);
+            journal.set('cardholderID', card.get('cardholderID'));
+            if(typeof Self.employee != 'undefined'){
+              journal.set('employeeID', Self.employee.get('name'));
+            }
+            journal.credentials = {};
+            journal.credentials.username = Self.merchant.get('merchantname');
+            journal.credentials.password = Self.merchant.get('password');
+            journal.save({},{
+              success: function(model, res){
+                console.log('successfully saved journal', model, res);
+                callback(null,res)
+              },
+              error: function(model, error){
+                console.log('failed to saved journal', model, error);
+                callback(error)
+              }
+            });
+
+          },
+          error: function(model, error){
+            console.log('failed to saved model', model, error);
+            callback(error);
+          }
+        })
+      }
+    })
+
+    console.log("number of tasks: ", tasks.length);
+    console.log("tasks", tasks)
+    async.series(tasks, function(error, results){
+      if(error){
+        if(typeof error.responseJSON != 'undefined' && typeof error.responseJSON.message != 'undefined' ){
+          console.info(error.responseJSON.message);
+          $('#error-notification').html(error.responseJSON.message).show();
+          setTimeout(function(){
+            $('#error-notification').hide();
+          },10000);
+
+        } else {
+          $('#error-notification').html('Error').show();
+          setTimeout(function(){
+            $('#error-notification').hide();
+          },10000);
+        }
+      } else {
+        console.log('async results:',results);
+        $('#success-notification').html('Successfully Processed Transaction.').show();
+        setTimeout(function(){
+          $('#success-notification').hide();
+        },10000);
+        Self.cards.fetch();
+        Self.journals.fetch();
+      }
+    })
+    //then make a transaction post from the default stewards account to the newly created patrons card for the amount.
     //create object.
     //save object to giftcard api.
   },
@@ -192,14 +288,22 @@ module.exports = Marionette.LayoutView.extend({
       }
 
       data.merchantname = Self.merchantname;
+      data.patrons = Self.patrons.toJSON();
+      data.currencies = Self.currencies.toJSON();
 
-
+      data.backonly = true;
       console.log('templates data:', data);
 
       _.extend(data, ViewHelpers);
       Self.$el.html(Self.template(data));
 
       Self.$('#cards').html(Templates['templatesCards'](data));
+
+      Self.$('#backonly').on('change', function(event){
+        data.backonly = Self.$('#backonly').prop('checked') === true;
+        Self.$('#cards').html(Templates['templatesCards'](data));
+        Self.drawQr(data);
+      })
 
       Self.$('#numberOfCards').on('change', function(event){
         data.numberOfCards = Self.$('#numberOfCards').val();

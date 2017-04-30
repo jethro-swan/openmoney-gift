@@ -300,6 +300,7 @@ module.exports = Marionette.AppRouter.extend({
             delete Self.templatesCollection;
             delete Self.journals;
             delete Self.employeeModel;
+            delete Self.templatesCollection;
 
             Self.darkTheme();
             //db = new PouchDB('giftcard');
@@ -585,7 +586,7 @@ module.exports = Marionette.AppRouter.extend({
       var breadcrumbsCollection = new Breadcrumbs(breadcrumbs);
       Self.dashhead.getRegion('breadcrumbs').reset();
       Self.dashhead.getRegion('breadcrumbs').show(new BreadcrumbsView( {collection: breadcrumbsCollection }));
-      Self.changePage(new TemplatesPrinterView({ merchant: Self.merchant, merchantname: merchantname, templates: Self.templatesCollection, templateName: templateName}), {});
+      Self.changePage(new TemplatesPrinterView({ merchant: Self.merchant, merchantname: merchantname, templates: Self.templatesCollection, templateName: templateName, patrons: Self.patronsCollection, currencies: Self.currenciesCollection, cards: Self.cardsCollection, journals: Self.journals}), {});
     });
   },
   support: function(merchantname){

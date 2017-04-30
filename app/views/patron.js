@@ -67,7 +67,8 @@ module.exports = Marionette.ItemView.extend({
     },
 
     drawQr: function(data){
-      for(var i = 0; i < data.cards.length; i++){
+
+      for(var i = data.start; i < data.end; i++){
 
         if(typeof data.img != 'undefined'){
 
@@ -280,14 +281,38 @@ module.exports = Marionette.ItemView.extend({
           data.backimg.src = 'data:' + data.template._attachments['backImg.png'].content_type + ';base64,' + data.template._attachments['backImg.png'].data;
         }
 
-        Self.drawQr(data);
 
 
-        this.$('[data-sort=table]').DataTable({
-          "paging": false,
+
+        var table = Self.$('[data-sort=table]').DataTable({
+          "paging": true,
           "info": false,
           "sDom": '<"top"i>rt<"bottom"lp><"clear">'
         });
+
+        var info = table.page.info();
+        if(typeof info != 'undefined'){
+          data.start = info.start;
+          data.end = info.end;
+          console.log('start:', data.start);
+          console.log('end:', data.end);
+          Self.drawQr(data);
+        }
+
+
+        Self.$('[data-sort=table]').on( 'page.dt', function () {
+            var info = table.page.info();
+            console.log( 'Showing page: '+info.page+' of '+info.pages );
+
+            data.start = info.start;
+            data.end = info.end;
+            console.log('start:', data.start);
+            console.log('end:', data.end);
+            setTimeout(function(){
+              Self.drawQr(data);
+            },1);
+
+        } );
 
         $('#patronForm').validate({
             onkeyup: false,
