@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Usage:
-#    set_embedded_constants <email> <url>
+#    ./install <email> <url>
 EMAIL=$1
 URL=$2
 
@@ -21,3 +21,13 @@ URL=$U2
 HERE=`pwd`
 find $HERE/app/ -type f -exec sed -i "s/openmoney\.gift@gmail\.com/$EMAIL/g" {} +
 find $HERE/app/ -type f -exec sed -i "s/openmoney\.gift/$URL/g" {} +
+
+
+# The Nginx vhost file is modified:
+
+cp openmoney-gift-nginx.conf.sample openmoney-gift-nginx.conf
+sed -i "s/om-gift\.lrc\.org\.uk/$URL/g" openmoney-gift-nginx.conf
+sudo cp openmoney-gift-nginx.conf /etc/nginx/sites-available/
+sudo ln -s /etc/nginx/sites-available/openmoney-gift-nginx.conf /etc/nginx/sites-enabled/.
+sudo service nginx reload
+

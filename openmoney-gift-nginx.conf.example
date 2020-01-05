@@ -4,6 +4,11 @@ upstream openmoney_api_js {
 upstream giftcard_api_js {
     server 127.0.0.1:9090;
 }
+
+# This version is for use in a VM where SSL is provided by the host.
+# Uncomment the following lines, and the "listen 443 ssl;" line, if used on the 
+# host.
+
 # HTTP server
 #
 #server {
@@ -28,7 +33,7 @@ server {
     #listen 443 ssl;
     #listen [::]:443 ssl ipv6only=on;
 
-    server_name  om-gift12.lrc.org.uk;
+    server_name  om-gift.lrc.org.uk;
     client_max_body_size 21m;
 
     #root /opt/openmoney-gift/;
