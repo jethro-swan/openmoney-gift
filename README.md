@@ -1,11 +1,9 @@
-# openmoney-gift-api
-
-## OpenMoney Gift interface
+## OpenMoney Gift interface for openmoney-gift-api
 
 The OpenMoney Gift API is a variant of the [OpenMoney API]https://github.com/jethro-swan/openmoney-api/ 
 for use with the [OpenMoney Gift]https://github.com/jethro-swan/openmoney-gift/ interface.
 
-## Install (e.g. locally or in headless VM)
+### Install (e.g. locally or in headless VM)
 
 Copy  openmoney-gift-nginx.conf.example  to  openmoney-gift-nginx.conf  and edit if necessary.
 
@@ -17,7 +15,7 @@ npm install
 ./install.sh <email from which alterts/response are sent> <URL of site>
 ```
 
-## Run in a background service
+### Run in a background service
 
 If not already installed
 ```sh
@@ -29,7 +27,7 @@ Start application
 pm2 start app.js --name "openmoney-gift-api"
 ```
 
-## License
+### License
 
 Copyright [2019] [Dominique Legault]
 
