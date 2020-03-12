@@ -14,7 +14,7 @@ Copy  openmoney-gift-nginx.conf.example  to  openmoney-gift-nginx.conf  and edit
 git clone https://github.com/jethro-swan/openmoney-gift-api
 cd openmoney-gift
 npm install
-./install.sh <email> <URL>
+./install.sh <email from which alterts/response are sent> <URL of site>
 ```
 
 ## Run in a background service
