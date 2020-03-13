@@ -25,7 +25,7 @@ find $HERE/app/ -type f -exec sed -i "s/openmoney\.gift/$URL/g" {} +
 
 # The Nginx vhost file is modified:
 
-cp openmoney-gift-nginx.conf.sample openmoney-gift-nginx.conf
+cp openmoney-gift-nginx.conf.example openmoney-gift-nginx.conf
 sed -i "s/om-gift\.lrc\.org\.uk/$URL/g" openmoney-gift-nginx.conf
 sudo cp openmoney-gift-nginx.conf /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/openmoney-gift-nginx.conf /etc/nginx/sites-enabled/.
