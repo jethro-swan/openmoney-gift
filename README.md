@@ -15,17 +15,7 @@ npm install
 ./install.sh <email from which alterts/response are sent> <URL of site>
 ```
 
-### Run in a background service
 
-If not already installed
-```sh
-sudo npm install pm2 -g
-```
-
-Start application
-```sh
-pm2 start app.js --name "openmoney-gift-api"
-```
 
 ### License
 
