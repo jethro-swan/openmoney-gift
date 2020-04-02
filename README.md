@@ -9,7 +9,7 @@ Copy  openmoney-gift-nginx.conf.example  to  openmoney-gift-nginx.conf  and edit
 
 
 ```sh
-git clone https://github.com/jethro-swan/openmoney-gift-api
+git clone https://github.com/jethro-swan/openmoney-gift
 cd openmoney-gift
 npm install
 ./install.sh <email from which alterts/response are sent> <URL of site>
