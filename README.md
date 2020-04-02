@@ -12,7 +12,7 @@ Copy  openmoney-gift-nginx.conf.example  to  openmoney-gift-nginx.conf  and edit
 git clone https://github.com/jethro-swan/openmoney-gift
 cd openmoney-gift
 npm install
-./install.sh <email from which alterts/response are sent> <URL of site>
+./install.sh <email from which alerts/response are sent> <URL of site>
 ```
 
 
