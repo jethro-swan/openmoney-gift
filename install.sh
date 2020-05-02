@@ -10,11 +10,11 @@ URL=$2
 # instance). A temporary solution is to perform a global substitution.
 
 # The email address and URL are reformatted for use in a regexp.
-E1=${EMAIL//./\\.}	# replace '.' with '\.'
-EMAIL=$E1
-U1=${URL//./\\.}	# replace '.' with '\.'
-U2=${U1////\\/}		# replace '/' with '\/'
-URL=$U2
+#E1=${EMAIL//./\\.}	# replace '.' with '\.'
+#EMAIL=$E1
+#U1=${URL//./\\.}	# replace '.' with '\.'
+#U2=${U1////\\/}		# replace '/' with '\/'
+#URL=$U2
 
 # "openmoney.gift" is a substring of "openmoney.gift@gmail.com" so the latter
 # substitution has to be made first.
