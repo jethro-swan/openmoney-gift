@@ -16,7 +16,6 @@ npm install
 ```
 
 
-
 ### License
 
 Copyright [2019] [Dominique Legault]
