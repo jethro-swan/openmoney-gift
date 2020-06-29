@@ -1,7 +1,7 @@
 ## OpenMoney Gift interface for openmoney-gift-api
 
-The OpenMoney Gift API is a variant of the [OpenMoney API]https://github.com/om-tools/openmoney-api/ 
-for use with the [OpenMoney Gift]https://github.com/om-tools/openmoney-gift/ interface.
+The OpenMoney Gift API is a variant of the [OpenMoney API]https://github.com/openmoney/openmoney-api/ 
+for use with the [OpenMoney Gift]https://github.com/openmoney/openmoney-gift/ interface.
 
 ### Install (e.g. locally or in headless VM)
 
@@ -9,7 +9,7 @@ Copy  openmoney-gift-nginx.conf.example  to  openmoney-gift-nginx.conf  and edit
 
 
 ```sh
-git clone https://github.com/om-tools/openmoney-gift
+git clone https://github.com/openmoney/openmoney-gift
 cd openmoney-gift
 npm install
 ./install.sh <email from which alerts/response are sent> <URL of site>
